@@ -6,6 +6,7 @@ import authRoutes from "./routes/authRoutes.js";
 import jobRoutes from "./routes/jobRoutes.js";
 import applicationRoutes from "./routes/applicationRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
+import connectDB from "./db/connectDB.js";
 
 dotenv.config();
 
@@ -13,9 +14,22 @@ const app = express();
 app.use(json());
 app.use(cors());
 
-connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => console.log("MongoDB Connected"))
-    .catch(err => console.error(err));
+const port = process.env.PORT || 8000;
+
+const startServer = async () => {
+    try {
+        await connectDB();
+
+        app.listen(port, () => {
+            console.log(`Server is running at port: ${port}`);
+        });
+    } catch (err) {
+        console.error("MONGO DB connection failed!!!", err);
+        process.exit(1);
+    }
+};
+
+startServer();
 
 app.use("/api/auth", authRoutes);
 app.use("/api/jobs", jobRoutes);

@@ -15,8 +15,8 @@ type DropZoneProps = {
     Btnname?: string;
     dropZoneBtnCls?: string;
     mainContainerCls?: string;
-    showXls?: Boolean,
-    singleDrop?: Boolean,
+    showXls?: boolean,
+    singleDrop?: boolean,
     minHeight?: string,
     singleDropClassName?: string,
     accept?: any

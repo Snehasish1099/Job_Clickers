@@ -1,6 +1,7 @@
 import { Button, CircularProgress } from '@mui/material'
 import React from 'react'
 import PropTypes from 'prop-types';
+import Image from 'next/image';
 
 const ButtonField = (props: any) => {
 	return (
@@ -24,7 +25,7 @@ const ButtonField = (props: any) => {
 				) : (
 					<div className={`flex flex-row items-center ${props.imgtext} ${props.buttonInsidecls}`}>
 						{props.img && (
-							<img src={props.img} alt={props.alt} className={"hover:visible"}/>
+							<Image src={props.img} alt={props.alt} className={"hover:visible"}/>
 						)}
 						<p>{props.buttonName}</p>
 					</div>

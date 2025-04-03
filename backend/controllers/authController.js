@@ -6,16 +6,27 @@ const { sign } = jwt;
 
 
 export async function registerUser(req, res) {
-    const { name, email, password, role } = req.body;
+    const { name, email, phone_number, password, role } = req.body;
     try {
-        let user = await User.findOne({ email });
-        if (user) {
+        if (!email && !phone_number) {
+            return res.status(400).json({ error: "Email or phone number is required" });
+        }
+
+        if (!role || !["jobseeker", "employer"].includes(role)) {
+            return res.status(400).json({ error: "Invalid role. Choose 'jobseeker' or 'employer'." });
+        }
+
+        const existingUser = await User.findOne({
+            $or: [{ email }, { phone_number }],
+        });
+
+        if (existingUser) {
             return res.status(400).json({ msg: "User already exists" });
         }
 
         const hashedPassword = await hash(password, 10);
 
-        user = await User.create({ name, email, password: hashedPassword, role });
+        const user = await User.create({ name, email, password: hashedPassword, role });
 
         res.status(201).json({ msg: "User registered successfully", user });
 
@@ -25,19 +36,22 @@ export async function registerUser(req, res) {
 }
 
 export async function loginUser(req, res) {
-    const { email, password } = req.body;
     try {
-        const user = await User.findOne({ email });
+        const { email, phone_number, password } = req.body;
+        const user = await User.findOne({
+            $or: [{ email }, { phone_number }],
+        });
+
         if (!user) {
             return res.status(400).json({ msg: "Invalid credentials" });
         }
 
         const isMatch = await compare(password, user.password);
         if (!isMatch) {
-            return res.status(400).json({ msg: "Invalid credentials" });
+            return res.status(400).json({ msg: "Invalid password" });
         }
 
-        const token = sign({ userId: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: "1d" });
+        const token = sign({ userId: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: "7d" });
 
         res.json({ token, role: user.role });
 
@@ -48,7 +62,7 @@ export async function loginUser(req, res) {
 
 export async function updateProfile(req, res) {
     try {
-        const { name, email, password } = req.body;
+        const { name, email, phone_number, password } = req.body;
         const user = await User.findById(req.user.userId);
         if (!user) {
             return res.status(404).json({ msg: "User not found" });
@@ -59,6 +73,9 @@ export async function updateProfile(req, res) {
         }
         if (email) {
             user.email = email;
+        }
+        if (phone_number) {
+            user.phone_number = phone_number;
         }
         if (password) {
             user.password = await bcrypt.hash(password, 10);

@@ -5,17 +5,6 @@ import Select from '@mui/material/Select';
 import { Box, Typography } from '@mui/material';
 import PropTypes from 'prop-types'
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-    PaperProps: {
-        style: {
-            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-            width: 250,
-        },
-    },
-};
-
 const DropDownField = (props: any) => {
 
     const handleChange = (e: any) => {

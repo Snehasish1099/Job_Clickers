@@ -13,6 +13,8 @@ router.get("/users", authMiddleware, adminMiddleware, async (req, res) => {
     res.json(users);
 });
 
+router.delete("/users/:userId", authenticate, isAdmin, deleteUser);
+
 router.get("/jobs", authMiddleware, adminMiddleware, async (req, res) => {
     const jobs = await Job.find().populate("postedBy", "name email");
     res.json(jobs);
