@@ -10,9 +10,6 @@
 !.yarn/releases
 !.yarn/versions
 
-frontend/node_modules/
-backend/node_modules/
-
 # testing
 /coverage
 
@@ -42,6 +39,3 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-node_modules/
-frontend/node_modules/
-backend/node_modules/
