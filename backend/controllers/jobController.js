@@ -10,9 +10,26 @@ export async function createJob(req, res) {
     }
 }
 
+export async function updateJob(req, res) {
+    try {
+      const job = await Job.findOne({ _id: req.params.jobId, postedBy: req.user.userId });
+  
+      if (!job) {
+        return res.status(404).json({ error: "Job not found or not authorized" });
+      }
+  
+      Object.assign(job, req.body);
+      await job.save();
+  
+      res.json({ message: "Job updated successfully", job });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+
 export async function getAllJobs(req, res) {
     try {
-        const jobs = await Job.find().populate("postedBy", "name email");
+        const jobs = await Job.find().populate("postedBy", "name email phone_number");
 
         res.json(jobs);
     } catch (error) {
