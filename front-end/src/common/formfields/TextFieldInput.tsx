@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { TextField, InputLabel, Popover, FormHelperText } from '@mui/material';
@@ -14,8 +16,8 @@ function TextFieldInput(props: any) {
     };
 
     const onChange = (event: any) => {
-        let value = event.target.value
-        let finalValue = value.replace(/^\s+/g, '')
+        const value = event.target.value
+        const finalValue = value.replace(/^\s+/g, '')
         if (props.index > -1) {
             props.onChange(event.target.name, finalValue, props.index);
         }
@@ -40,8 +42,8 @@ function TextFieldInput(props: any) {
         if (props.onFocusOut) {
             if (e.currentTarget === e.target) {
                 props.onFocusOut(props.textinputname)
-                let value = e.target.value;
-                let newValue = value.trim()
+                const value = e.target.value;
+                const newValue = value.trim()
                 if (props.index > -1) {
                     props.onChange(e.target.name, newValue, props.index);
                 }
@@ -53,7 +55,7 @@ function TextFieldInput(props: any) {
     }
 
     const floatingLabel = [
-        <span className={(props.floatingError ? 'errorLabelCls' : '') + `${' flotinglabelclss'}`}>
+        <span key="floating-label" className={(props.floatingError ? 'errorLabelCls' : '') + `${' flotinglabelclss'}`}>
             {props.floatingLabel}
         </span>
     ]

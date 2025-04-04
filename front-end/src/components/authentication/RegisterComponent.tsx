@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react'
 import { Controller, useForm } from "react-hook-form";
 import TextFieldInput from '../../common/formfields/TextFieldInput';
@@ -8,9 +10,10 @@ import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import DropDownField from '@/src/common/formfields/DropDownField';
 
 
-const Register = (props: any) => {
+const RegisterComponent = (props: any) => {
 
   const {
     handleSubmit,
@@ -21,12 +24,17 @@ const Register = (props: any) => {
 
   const onSubmit = (data: any) => {
     console.log(data, '# data');
-    // props.RegistrationApiCall(data)
+    props.RegistrationApiCall(data)
   };
 
   const [showPassword, setShowPassword] = useState(true)
   const [showCPassword, setShowCPassword] = useState(true)
   const router = useRouter()
+
+  const roleArr = [
+    {name: "Job-Seeker", value: "jobseeker"},
+    {name: "Employer", value: "employer"},
+  ]
 
   return (
     <div className='w-full flex justify-center items-center'>
@@ -35,6 +43,32 @@ const Register = (props: any) => {
         <h2 className="text-2xl font-bold my-4 text-center">{"Register"}</h2>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 my-4">
+          <div>
+            <Controller name={"name"}
+              control={control}
+              render={({ field: { onChange, value } }) => {
+                return (
+                  (<TextFieldInput
+                    onlyValue
+                    textnewclass={`w-full text-sm `}
+                    floatingLabel='Name'
+                    value={(value)}
+                    onChange={onChange}
+                  />)
+                )
+              }}
+              rules={{
+                required: true, pattern: /^[a-zA-Z][a-zA-Z ]*/i
+              }}
+            />
+            {errors.name && errors.name.type === "required" && (
+              <span className="error-message text-red-400 text-xs">Required</span>
+            )}
+            {errors.name && errors.name.type === "pattern" && (
+              <span className="error-message text-red-400 text-xs">Not Valid</span>
+            )}
+          </div>
+
           {/* Email  */}
           <div>
             <Controller name={"email"}
@@ -44,7 +78,7 @@ const Register = (props: any) => {
                   (<TextFieldInput
                     onlyValue
                     textnewclass={`w-full text-sm `}
-                    floatingLabel='email'
+                    floatingLabel='Email'
                     value={(value)}
                     onChange={onChange}
                   />)
@@ -63,7 +97,7 @@ const Register = (props: any) => {
           </div>
 
           {/* Phone Number  */}
-          <div className=''>
+          <div className='text-black'>
             <Controller name={"phone_number"}
               control={control}
               render={({ field: { onChange, value } }) => {
@@ -86,12 +120,36 @@ const Register = (props: any) => {
                 pattern: /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/i,
               }}
             />
-            {/* phone error msg  */}
             {errors.phone_number && errors.phone_number.type === "required" && (
               <span className="error-message text-red-400 text-xs">{"Required"}</span>
             )}
             {errors.phone_number && errors.phone_number.type === "pattern" && (
               <span className="error-message text-red-400 text-xs">{"Wrong Pattern"}</span>
+            )}
+          </div>
+
+          {/* Role  */}
+          <div className='text-black'>
+            <Controller 
+              name={"role"}
+              control={control}
+              render={({ field: { onChange, value } }) => {
+                return (
+                  <DropDownField
+                    size="small"
+                    selectOption={roleArr}
+                    placeholder={`Role`}
+                    option={value}
+                    handleChange={onChange}
+                  />
+                )
+              }}
+              rules={{
+                required: true,
+              }}
+            />
+            {errors.role && errors.role.type === "required" && (
+              <span className="error-message text-red-400 text-xs">{"Required"}</span>
             )}
           </div>
 
@@ -191,4 +249,4 @@ const Register = (props: any) => {
   )
 }
 
-export default Register
+export default RegisterComponent

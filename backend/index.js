@@ -1,6 +1,5 @@
 import dotenv from "dotenv";
-import express, { json } from "express";
-import { connect } from "mongoose";
+import express from "express";
 import cors from "cors";
 import authRoutes from "./routes/authRoutes.js";
 import jobRoutes from "./routes/jobRoutes.js";
@@ -11,8 +10,14 @@ import connectDB from "./db/connectDB.js";
 dotenv.config();
 
 const app = express();
-app.use(json());
+
+app.use(express.json());
 app.use(cors());
+
+app.use("/api/auth", authRoutes);
+app.use("/api/jobs", jobRoutes);
+app.use("/api/applications", applicationRoutes);
+app.use("/api/admin", adminRoutes);
 
 const port = process.env.PORT || 8000;
 
@@ -30,11 +35,3 @@ const startServer = async () => {
 };
 
 startServer();
-
-app.use("/api/auth", authRoutes);
-app.use("/api/jobs", jobRoutes);
-app.use("/api/applications", applicationRoutes);
-app.use("/api/admin", adminRoutes);
-
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

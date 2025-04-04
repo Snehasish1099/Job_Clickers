@@ -1,3 +1,5 @@
+'use client';
+
 import { useState } from "react";
 import { doGetApiCall, doPostApiCall, doPutApiCall } from "../../utils/ApiConfig";
 import { useDispatch } from "react-redux";
@@ -16,12 +18,13 @@ export const AuthHooks = () => {
     // Registration API call
     const RegistrationApiCall = async (formData: any) => {
         const data = {
-            url: `${process.env.NEXT_PUBLIC_BASE_URL}/register`,
+            url: `${process.env.NEXT_PUBLIC_BASE_URL}/auth/register`,
             bodyData: {
-                username: formData?.userName,
-                password: formData?.password,
+                name: formData?.name,
+                email: formData?.email,
                 phone_number: formData?.phone_number,
-                address: formData?.address,
+                password: formData?.password,
+                role: formData?.role 
             }
         }
         const res: any = await doPostApiCall(data)
@@ -37,9 +40,9 @@ export const AuthHooks = () => {
     // Login API call 
     const LoginApiCall = async (formdata: any) => {
         const data = {
-            url: `${process.env.NEXT_PUBLIC_BASE_URL}/login`,
+            url: `${process.env.NEXT_PUBLIC_BASE_URL}/auth/login`,
             bodyData: {
-                username: formdata?.name,
+                email: formdata?.email,
                 password: formdata?.password
             }
         }

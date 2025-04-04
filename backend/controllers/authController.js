@@ -6,6 +6,7 @@ const { sign } = jwt;
 
 
 export async function registerUser(req, res) {
+    console.log("register: req.body", req.body);
     const { name, email, phone_number, password, role } = req.body;
     try {
         if (!email && !phone_number) {
@@ -26,7 +27,7 @@ export async function registerUser(req, res) {
 
         const hashedPassword = await hash(password, 10);
 
-        const user = await User.create({ name, email, password: hashedPassword, role });
+        const user = await User.create({ name, email, phone_number, password: hashedPassword, role });
 
         res.status(201).json({ msg: "User registered successfully", user });
 

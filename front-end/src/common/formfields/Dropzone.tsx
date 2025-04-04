@@ -1,3 +1,5 @@
+'use client';
+
 import { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import { Box, Typography } from "@mui/material";
