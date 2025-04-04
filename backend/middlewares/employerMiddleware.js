@@ -3,4 +3,4 @@ export function isEmployer(req, res, next) {
       return res.status(403).json({ error: "Access denied. Employers only." });
     }
     next();
-  }
+}

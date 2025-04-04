@@ -4,16 +4,14 @@ import adminMiddleware from "../middlewares/adminMiddleware.js";
 import User from "../models/User.js";
 import Job from "../models/Job.js";
 import Application from "../models/Application.js";
+import { getAllUsers, deleteUser } from "../controllers/adminController.js";
 
 const router = Router();
 
 // Admin Routes
-router.get("/users", authMiddleware, adminMiddleware, async (req, res) => {
-    const users = await User.find().select("-password");
-    res.json(users);
-});
+router.get("/users", authMiddleware, adminMiddleware, getAllUsers);
 
-router.delete("/users/:userId", authenticate, isAdmin, deleteUser);
+router.delete("/users/:userId", authMiddleware, adminMiddleware, deleteUser);
 
 router.get("/jobs", authMiddleware, adminMiddleware, async (req, res) => {
     const jobs = await Job.find().populate("postedBy", "name email");
