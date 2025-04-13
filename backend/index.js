@@ -6,6 +6,8 @@ import jobRoutes from "./routes/jobRoutes.js";
 import applicationRoutes from "./routes/applicationRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import connectDB from "./db/connectDB.js";
+import passport from "passport";
+import session from "express-session";
 
 dotenv.config();
 
@@ -13,6 +15,18 @@ const app = express();
 
 app.use(express.json());
 app.use(cors());
+
+app.use(
+    session({
+        secret: process.env.SESSION_SECRET || "session-secret",
+        resave: false,
+        saveUninitialized: false,
+    })
+);
+
+// 🔐 Passport initialization
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use("/api/auth", authRoutes);
 app.use("/api/jobs", jobRoutes);
