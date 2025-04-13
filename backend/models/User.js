@@ -5,7 +5,9 @@ const UserSchema = new Schema({
     email: { type: String, required: true, unique: true },
     phone_number: { type: String, required: true },
     password: { type: String, required: true },
-    role: { type: String, enum: ["jobseeker", "employer", "admin"], required: true }
+    role: { type: String, enum: ["jobseeker", "employer", "admin"], required: true },
+    googleId: { type: String, unique: true, sparse: true, },
+    githubId: { type: String, unique: true, sparse: true },
 }, { timestamps: true });
 
 const User = mongoose.model("User", UserSchema);

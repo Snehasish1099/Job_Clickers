@@ -33,6 +33,7 @@ const LoginComponent = (props: any) => {
           <p className='text-black text-xl'>{"Welcome Back"}</p>
         </div>
 
+        {/* Normal Form  */}
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 my-4 w-full flex flex-col items-center">
           {/* Email  */}
           <div className='w-full sm:w-1/2'>
@@ -145,6 +146,19 @@ const LoginComponent = (props: any) => {
         </form>
 
         <p className='text-black text-xs'>{"Don't have an account?"}&nbsp;<span onClick={() => router.push('/register')} className='text-blue-600 cursor-pointer underline'>{"Register"}</span></p>
+
+        <div className='border-b my-2'></div>
+
+        <div className='w-1/2 flex justify-between'>
+          <a href="http://localhost:9001/api/auth/google" className='border p-1'>
+            Google Login
+          </a>
+
+          <a href="http://localhost:9001/api/auth/github" className='border p-1'>
+            GitHub Login
+          </a>
+        </div>
+
       </div>
 
     </div>
