@@ -96,7 +96,7 @@ const RegisterComponent = (props: any) => {
                   )
                 }}
                 rules={{
-                  required: true, pattern: /^[a-zA-Z][a-zA-Z ]*/i
+                  required: true, pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/
                 }}
               />
               {errors.email && errors.email.type === "required" && (
@@ -117,7 +117,6 @@ const RegisterComponent = (props: any) => {
                       defaultCountry={'in'}
                       // placeholder={'Enter Phone Number'}
                       label={'Enter Phone No.'}
-                      containerClass={'!w-full'}
                       extraCls={`!w-full text-sm mt-[0.45rem]`}
                       inputCls={`!w-full h-[3.3rem] cursor-default`}
                       onChange={(value: any) => { onChange(value) }}

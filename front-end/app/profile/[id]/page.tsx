@@ -1,3 +1,4 @@
+import ProfilePage from '@/src/components/LandingPageComponents/profile/ProfilePage'
 import MainComponent from '@/src/components/MainComponent'
 import React from 'react'
 
@@ -5,7 +6,7 @@ const page = () => {
   return (
     <div>
       <MainComponent>
-        Profile page
+        <ProfilePage />
       </MainComponent>
     </div>
   )

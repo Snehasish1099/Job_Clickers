@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Image from 'next/image';
 import Logo from '@/src/images/job_clicker_logo.jpg'
 import HomeIcon from '@mui/icons-material/Home';
@@ -13,17 +13,28 @@ import { usePathname, useRouter } from 'next/navigation';
 import TextFieldInput from '@/src/common/formfields/TextFieldInput';
 import { ClickAwayListener } from '@mui/material';
 import LogoutIcon from '@mui/icons-material/Logout';
+import SettingsIcon from '@mui/icons-material/Settings';
 import './index.css'
+import { AuthHooks } from '@/src/containers/authetication/Hooks';
 
 const Header = (props: any) => {
+
+    const { getUserByIdApiCall } = AuthHooks()
+
+    const userId: any = typeof window !== 'undefined' && localStorage?.getItem('userId')
+    const token: any = typeof window !== 'undefined' && localStorage?.getItem('token')
+
+    useEffect(() => {
+        getUserByIdApiCall(userId)
+    }, [userId])
 
     const router = useRouter()
     const pathName = usePathname()
 
     const [openDetails, setOpenDetails] = useState(false)
     const userProfileArr = [
-        { name: 'View Profile', logo: <AccountCircleIcon />, link: '/profile' },
-        { name: 'Settings', logo: <AccountCircleIcon />, link: '/settings' },
+        { name: 'View Profile', logo: <AccountCircleIcon />, link: `/profile/${userId}` },
+        { name: 'Settings', logo: <SettingsIcon />, link: '/settings' },
         { name: 'Sign Out', logo: <LogoutIcon />, link: '/login' },
     ]
 
@@ -39,7 +50,7 @@ const Header = (props: any) => {
                 handleChange={() => props.handleChange()}
             />
 
-            {localStorage?.getItem('token') &&
+            {token &&
                 <div className={`w-1/5 flex items-center justify-between cursor-pointer relative`}>
                     <HomeIcon className='text-white' onClick={() => router?.push("/home")} />
                     <WorkIcon className='text-white' onClick={() => router?.push("/home")} />

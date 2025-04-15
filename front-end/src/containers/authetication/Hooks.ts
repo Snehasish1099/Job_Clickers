@@ -71,8 +71,8 @@ export const AuthHooks = () => {
             url: `${process.env.NEXT_PUBLIC_BASE_URL}/auth/users/${userId}`,
         }
         const res: any = await doGetApiCall(data)
-        if (res?.status === 200) {
-            dispatch(userDetailsReducer(res?.data))
+        if (res?.status === 200 || res?.message === "User found") {
+            dispatch(userDetailsReducer(res?.user))
         } else {
             dispatch(userDetailsReducer(null))
         }

@@ -63,7 +63,7 @@ const LoginComponent = (props: any) => {
                 )}
                 rules={{
                   required: true,
-                  pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/i,
+                  pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/
                 }}
               />
               {errors.email?.type === 'required' && (
@@ -86,7 +86,6 @@ const LoginComponent = (props: any) => {
                     defaultCountry="in"
                     placeholder="Phone no"
                     label="Phone Number"
-                    containerClass="!w-full "
                     extraCls="!w-full text-sm mt-[0.45rem]"
                     inputCls="!w-full h-[3.3rem] cursor-default"
                     onChange={(value: any) => onChange(value)}
