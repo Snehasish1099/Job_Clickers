@@ -54,8 +54,20 @@ export async function loginUser(req, res) {
 
         const token = sign({ userId: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: "7d" });
 
-        res.json({ token, role: user.role });
+        res.status(200).json({ token, user: user, status: 200 });
 
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
+
+export async function getProfile(req, res) {
+    try {
+        const user = await User.findById(req.params.id)
+        if (!user) {
+            return res.status(404).json({ msg: "User not found" })
+        }
+        res.status(200).json({ user: user, message: "User found" })
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

@@ -1,9 +1,11 @@
 import { configureStore, combineReducers, AnyAction } from '@reduxjs/toolkit';
 import logger from 'redux-logger'
 import demoSlice from './demoReducer' // <--- Not for use, this is just an example
+import authReducer from '@/src/containers/authetication/authReducer'
 
 const combinedReducer = combineReducers({
   abc: demoSlice, // <--- Not for use, this is just an example
+  auth: authReducer
 });
 
 const rootReducer = (state: any, action: AnyAction) => {
