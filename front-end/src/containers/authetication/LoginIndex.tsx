@@ -7,12 +7,14 @@ import { AuthHooks } from './Hooks'
 
 const LoginIndex = () => {
 
-    const { LoginApiCall } = AuthHooks()
+    const { loginType, setLoginType, LoginApiCall } = AuthHooks()
 
     return (
         <div>
             <LoginComponent
                 LoginApiCall={LoginApiCall}
+                loginType={loginType}
+                setLoginType={setLoginType}
             />
         </div>
     )

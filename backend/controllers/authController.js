@@ -54,8 +54,20 @@ export async function loginUser(req, res) {
 
         const token = sign({ userId: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: "7d" });
 
-        res.json({ token, role: user.role });
+        res.status(200).json({ token, user: user, status: 200 });
 
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
+
+export async function getProfile(req, res) {
+    try {
+        const user = await User.findById(req.params.id)
+        if (!user) {
+            return res.status(404).json({ msg: "User not found" })
+        }
+        res.status(200).json({ user: user, message: "User found", status: 200 })
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -63,8 +75,8 @@ export async function loginUser(req, res) {
 
 export async function updateProfile(req, res) {
     try {
-        const { name, email, phone_number, password } = req.body;
-        const user = await User.findById(req.user.userId);
+        const { name, email, phone_number, password, education, work_experience, location, headline, skills, certifications } = req.body;
+        const user = await User.findById(req.params.id);
         if (!user) {
             return res.status(404).json({ msg: "User not found" });
         }
@@ -82,8 +94,32 @@ export async function updateProfile(req, res) {
             user.password = await bcrypt.hash(password, 10);
         }
 
+        if (location) {
+            user.location = location;
+        }
+        if (headline) {
+            user.headline = headline; 
+        }
+        if (education) {
+            user.education = education;
+        }
+        if (work_experience) {
+            user.work_experience = work_experience; 
+        }
+        if (skills) {
+            user.skills = skills; 
+        }
+        if (certifications) {
+            user.certifications = certifications; 
+        }
+        
+        if (req.file) {
+            const resumeFilePath = path.join('uploads', req.file.filename); 
+            user.resume = resumeFilePath; 
+        }
+
         await user.save();
-        res.json({ msg: "Profile updated successfully", user });
+        res.status(200).json({ msg: "Profile updated successfully", user: user, status: 200 });
 
     } catch (error) {
         res.status(500).json({ error: error.message });
