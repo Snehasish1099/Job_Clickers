@@ -67,12 +67,14 @@ export async function getProfile(req, res) {
         if (!user) {
             return res.status(404).json({ msg: "User not found" })
         }
+
         res.status(200).json({ user: user, message: "User found", status: 200 })
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 }
 
+//Might need furthur modifications later on
 export async function updateProfile(req, res) {
     try {
         const { name, email, phone_number, password, education, work_experience, location, headline, skills, certifications } = req.body;
