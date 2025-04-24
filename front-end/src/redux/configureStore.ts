@@ -2,10 +2,12 @@ import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import logger from 'redux-logger'
 import demoSlice from './demoReducer' // <--- Not for use, this is just an example
 import authReducer from '@/src/containers/authetication/authReducer'
+import jobReducer from "@/src/containers/jobs/jobReducer"
 
 const combinedReducer = combineReducers({
   abc: demoSlice, // <--- Not for use, this is just an example
-  auth: authReducer
+  auth: authReducer,
+  jobs: jobReducer
 });
 
 const rootReducer = (state: any, action: any) => {

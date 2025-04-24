@@ -29,7 +29,7 @@ export async function registerUser(req, res) {
 
         const user = await User.create({ name, email, phone_number, password: hashedPassword, role });
 
-        res.status(201).json({ msg: "User registered successfully", user });
+        res.status(201).json({ message: "User registered successfully", status: 201, user });
 
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -54,7 +54,7 @@ export async function loginUser(req, res) {
 
         const token = sign({ userId: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: "7d" });
 
-        res.status(200).json({ token, user: user, status: 200 });
+        res.status(200).json({ token, user: user, status: 200, message: 'Login Successful' });
 
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -80,7 +80,7 @@ export async function updateProfile(req, res) {
         const { name, email, phone_number, password, education, work_experience, location, headline, skills, certifications } = req.body;
         const user = await User.findById(req.params.id);
         if (!user) {
-            return res.status(404).json({ msg: "User not found" });
+            return res.status(404).json({ message: "User not found", status: 404 });
         }
 
         if (name) {
@@ -121,7 +121,7 @@ export async function updateProfile(req, res) {
         }
 
         await user.save();
-        res.status(200).json({ msg: "Profile updated successfully", user: user, status: 200 });
+        res.status(200).json({ message: "Profile updated successfully", user: user, status: 200 });
 
     } catch (error) {
         res.status(500).json({ error: error.message });

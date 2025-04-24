@@ -18,8 +18,6 @@ const ProfilePage = (props: any) => {
         setOpenEdit(!openEdit)
     }
 
-    console.log(openEdit, '# openEdit')
-
     return (
         <div className="max-w-4xl mx-auto bg-white shadow-md rounded-2xl p-6 mt-10 space-y-6">
 
@@ -28,7 +26,7 @@ const ProfilePage = (props: any) => {
                 <div className="flex items-center space-x-4">
                     <Avatar src={userDetails?.avatar} sx={{ width: 80, height: 80 }} />
                     <div>
-                        <h2 className="text-xl font-bold">{userDetails?.name}</h2>
+                        <h2 className="text-xl font-bold">{userDetails?.name}&nbsp;<span className='text-sm capitalize font-normal'>({userDetails?.role})</span></h2>
                         <p className="text-gray-600">{userDetails?.headline}</p>
                         <p className="text-sm text-gray-500">{userDetails?.location}</p>
                     </div>
@@ -66,7 +64,7 @@ const ProfilePage = (props: any) => {
             <section>
                 <h3 className="text-lg font-semibold mb-2">Contact Information</h3>
                 <p><span className="font-medium">📧 Email:</span> {userDetails?.email}</p>
-                <p><span className="font-medium">📱 Phone:</span> {userDetails?.phone || 'N/A'}</p>
+                <p><span className="font-medium">📱 Phone:</span> {userDetails?.phone_number || 'N/A'}</p>
             </section>
 
             <Divider />

@@ -1,11 +1,23 @@
 'use client';
 
-import React from 'react'
+import { AdminHooks } from '@/src/containers/admin/Hooks';
+import { JobHooks } from '@/src/containers/jobs/Hooks';
+import React, { useEffect } from 'react'
 
-const LandingPage = (props: any) => {
+const LandingPage = ({ children }: { children: React.ReactNode }) => {
+
+  const { getAllJobsApiCall } = JobHooks()
+  const { getAllUsersApiCall } = AdminHooks()
+
+  useEffect(() => {
+    getAllJobsApiCall()
+    getAllUsersApiCall()  // For testing the api, only to be used in Admin
+  }, [])
 
   return (
-    <div className=''>
+    <div className='flex'>
+      Home
+      {children}
     </div>
   )
 }

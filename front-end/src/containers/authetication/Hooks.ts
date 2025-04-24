@@ -54,6 +54,8 @@ export const AuthHooks = () => {
         if (res?.status === 200) {
             localStorage.setItem('token', res?.token)
             localStorage.setItem('userId', res?.user?._id)
+            localStorage.setItem('role', res?.user?.role)
+
             getUserByIdApiCall(res?.user?._id)
             // dispatch(snackbarOpen({ alertType: 'success', message: "Login Successful" }))
             router.push(`/home`)

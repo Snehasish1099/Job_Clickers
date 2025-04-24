@@ -23,24 +23,36 @@ const Header = (props: any) => {
 
     const userId: any = typeof window !== 'undefined' && localStorage?.getItem('userId')
     const token: any = typeof window !== 'undefined' && localStorage?.getItem('token')
+    const role: any = typeof window !== 'undefined' && localStorage?.getItem('role');
 
     useEffect(() => {
-        getUserByIdApiCall(userId)
+        userId && getUserByIdApiCall(userId)
     }, [userId])
 
     const router = useRouter()
     const pathName = usePathname()
 
     const [openDetails, setOpenDetails] = useState(false)
-    const userProfileArr = [
-        { name: 'View Profile', logo: <AccountCircleIcon />, link: `/profile/${userId}` },
-        { name: 'Settings', logo: <SettingsIcon />, link: '/settings' },
-        { name: 'Sign Out', logo: <LogoutIcon />, link: '/login' },
-    ]
+    const userProfileArr = role === 'employer' ?
+        [
+            { name: 'View Profile', logo: <AccountCircleIcon />, link: `/profile/${userId}` },
+            { name: 'Manage Jobs', logo: <WorkIcon />, link: '/employer/jobs/manage' },
+            { name: 'Post Job', logo: <WorkIcon />, link: '/employer/jobs/new' },
+            { name: 'Settings', logo: <SettingsIcon />, link: '/settings' },
+            { name: 'Sign Out', logo: <LogoutIcon />, link: '/login' },
+        ]
+        :
+        role === 'jobseeker' && [
+            { name: 'View Profile', logo: <AccountCircleIcon />, link: `/profile/${userId}` },
+            { name: 'Saved Jobs', logo: <WorkIcon />, link: '/jobs/saved' },
+            { name: 'Applied Jobs', logo: <MessageIcon />, link: '/jobs/applied' },
+            { name: 'Settings', logo: <SettingsIcon />, link: '/settings' },
+            { name: 'Sign Out', logo: <LogoutIcon />, link: '/login' },
+        ]
 
     return (
         <div className='bg-blue-800 h-16 w-full flex justify-between items-center px-[3%] gap-5 '>
-            <Image src={Logo} alt="logo" className='cursor-pointer' height={75} width={75} />
+            <Image src={Logo} alt="logo" className='cursor-pointer' height={75} width={75} onClick={() => router.push('/home')} />
 
             <TextFieldInput
                 srchCls={'searchClass w-2/5 rouned-md !border-0'}
@@ -61,7 +73,7 @@ const Header = (props: any) => {
                     {openDetails &&
                         <ClickAwayListener onClickAway={() => setOpenDetails(false)}>
                             <div className={`w-[65%] bg-white border-x border-b p-2 shadow-md rounded-b absolute top-11 right-0 z-20 h-fit overflow-hidden hover:overflow-y-auto`}>
-                                {userProfileArr.map((item, idx) =>
+                                {userProfileArr && userProfileArr?.length > 0 && userProfileArr?.map((item, idx) =>
                                     <div
                                         key={idx}
                                         onClick={() => router?.push(item?.link)}
