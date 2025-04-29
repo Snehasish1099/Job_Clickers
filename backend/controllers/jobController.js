@@ -29,7 +29,7 @@ export async function updateJob(req, res) {
 
 export async function getAllJobs(req, res) {
     try {
-        const jobs = await Job.find().populate("postedBy", "name email phone_number");
+        const jobs = await Job.find().populate("postedBy", "name email phone_number role");
         if (!jobs?.length) {
             return res.status(404).json({ message: "No Jobs found" })
         }
@@ -42,7 +42,7 @@ export async function getAllJobs(req, res) {
 
 export async function getJobById(req, res) {
     try {
-        const job = await Job.findById(req.params.id);
+        const job = await Job.findById(req.params.id).populate("postedBy", "name email phone_number role");
 
         if (!job) {
             return res.status(404).json({ message: "Job not found", status: 404 });
