@@ -21,7 +21,7 @@ import { JobHooks } from "@/src/containers/jobs/Hooks";
 import { RootState } from "@/src/redux/configureStore";
 
 const JobsManagementTable = () => {
-  const { getAllJobsApiCall } = JobHooks();
+  const { getAllJobsApiCall, getJobByJobIdApiCall } = JobHooks();
   const router = useRouter();
 
   useEffect(() => {
@@ -31,12 +31,8 @@ const JobsManagementTable = () => {
   const jobs = useSelector((state: RootState) => state.jobs.jobs);
 
   const handleEdit = (id: string) => {
-    router.push(`/dashboard/employer/jobs/edit/${id}`);
-  };
-
-  const handleDelete = (id: string) => {
-    // Add delete logic here
-    console.log("Deleting job with id:", id);
+    getJobByJobIdApiCall(id)
+    router.push(`/employer/jobs/edit/${id}`);
   };
 
   return (
@@ -77,7 +73,8 @@ const JobsManagementTable = () => {
                       <Button
                         variant="outlined"
                         color="error"
-                        onClick={() => handleDelete(job._id)}
+                        disabled
+                        // onClick={() => handleDelete(job._id)}
                         startIcon={<DeleteIcon />}
                       >
                         Delete
