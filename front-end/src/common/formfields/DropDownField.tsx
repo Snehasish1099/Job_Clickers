@@ -13,9 +13,9 @@ const DropDownField = (props: any) => {
         props.handleChange(e);
     };
     return (
-        <Box sx={{ minWidth: 120 }} className={`${props.dropdownContainerCls} ${props.extraMainCls}`}>
+        <Box sx={{ minWidth: 120 }} className={`${props.dropdownContainerCls}`}>
             <FormControl fullWidth>
-                <div className={`flex flex-col ${props.label ? 'gap-2' : ''} ${props.dropdownContainerCls}`}>
+                <div className={`flex flex-col ${props.label ? 'gap-2' : ''} `}>
                     <label className={props.dropDownLabelCls}>{props.label}</label>
                     <Select
                         className={`relative ${props.option ? `` : `text-gray-60`} ${props.dropDownRootCls} ${props.error ? `!border !border-red-400` : ``}`}
@@ -57,7 +57,6 @@ const DropDownField = (props: any) => {
 }
 
 DropDownField.propTypes = {
-    extraMainCls: PropTypes.string,
     dropDownLabelCls: PropTypes.string,
     label: PropTypes.string,
     dropDownRootCls: PropTypes.string,

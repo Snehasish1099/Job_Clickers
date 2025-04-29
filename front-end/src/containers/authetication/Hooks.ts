@@ -15,6 +15,8 @@ export const AuthHooks = () => {
 
     const [openEditProfile, setOpenEditProfile] = useState(false)
 
+    const [loginType, setLoginType] = useState<'email' | 'phone'>('email');
+
     // Registration API call
     const RegistrationApiCall = async (formData: any) => {
         const data = {
@@ -24,7 +26,7 @@ export const AuthHooks = () => {
                 email: formData?.email,
                 phone_number: formData?.phone_number,
                 password: formData?.password,
-                role: formData?.role 
+                role: formData?.role
             }
         }
         const res: any = await doPostApiCall(data)
@@ -43,6 +45,7 @@ export const AuthHooks = () => {
             url: `${process.env.NEXT_PUBLIC_BASE_URL}/auth/login`,
             bodyData: {
                 email: formdata?.email,
+                phone_number: formdata?.phone_number,
                 password: formdata?.password
             }
         }
@@ -50,10 +53,12 @@ export const AuthHooks = () => {
         const res: any = await doPostApiCall(data)
         if (res?.status === 200) {
             localStorage.setItem('token', res?.token)
-            localStorage.setItem('userId', res?.userId)
-            getUserByIdApiCall(res?.userId)
+            localStorage.setItem('userId', res?.user?._id)
+            localStorage.setItem('role', res?.user?.role)
+
+            getUserByIdApiCall(res?.user?._id)
             // dispatch(snackbarOpen({ alertType: 'success', message: "Login Successful" }))
-            // router.push(`/user_profile/${res?.userId}`)
+            router.push(`/home`)
         } else {
             // dispatch(snackbarOpen({ alertType: 'error', message: "Login Failed, please try again." }))
         }
@@ -61,32 +66,15 @@ export const AuthHooks = () => {
 
     /**
      * @method GET
-     * @description - gets all the registered data
-     */
-    // const getAllUsersApiCall = async () => {
-    //     let data = {
-    //         url: `${process.env.NEXT_PUBLIC_BASE_URL}/users/`,
-    //     }
-    //     let res = await doGetApiCall(data)
-    //     if (res?.status === 200) {
-    //         const newData = res?.data?.filter((user) => user?.id !== 1)     // To filter the data without admin data, might need to modify further later on
-    //         dispatch(allUsersReducer(newData))
-    //     } else {
-    //         dispatch(allUsersReducer([]))
-    //     }
-    // }
-
-    /**
-     * @method GET
      * @description - gets user details by id
      */
     const getUserByIdApiCall = async (userId: string) => {
         const data = {
-            url: `${process.env.NEXT_PUBLIC_BASE_URL}/users/${userId}`,
+            url: `${process.env.NEXT_PUBLIC_BASE_URL}/auth/users/${userId}`,
         }
         const res: any = await doGetApiCall(data)
-        if (res?.status === 200) {
-            dispatch(userDetailsReducer(res?.data))
+        if (res?.status === 200 || res?.message === "User found") {
+            dispatch(userDetailsReducer(res?.user))
         } else {
             dispatch(userDetailsReducer(null))
         }
@@ -117,6 +105,8 @@ export const AuthHooks = () => {
     }
 
     return {
+        loginType,
+        setLoginType,
         LoginApiCall,
         RegistrationApiCall,
 

@@ -85,7 +85,7 @@ function TextFieldInput(props: any) {
                 className={props.textnewclass}
                 type={props.typeNumber ? 'number' : props.typePassword ? 'password' : 'text'}
                 name={props.textinputname}
-                margin='dense'
+                margin='none'
                 autoFocus={props.autoFocus}
                 placeholder={props.placeholder}
                 error={props.error}
