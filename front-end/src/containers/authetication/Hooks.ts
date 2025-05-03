@@ -5,7 +5,6 @@ import { doGetApiCall, doPostApiCall, doPutApiCall } from "../../utils/ApiConfig
 import { useDispatch } from "react-redux";
 import { userDetailsReducer } from "./authReducer";
 import { useRouter } from "next/navigation";
-import { resFromApi } from "@/src/utils/interface";
 // import { snackbarOpen } from "../snackbarReducerSlice";
 
 export const AuthHooks = () => {
@@ -14,7 +13,7 @@ export const AuthHooks = () => {
 
     const router = useRouter();
 
-    const [openEditProfile, setOpenEditProfile] = useState(false)
+    const [openEditProfile, setOpenEditProfile] = useState<boolean>(false)
 
     const [loginType, setLoginType] = useState<'email' | 'phone'>('email');
 
