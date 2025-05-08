@@ -108,7 +108,7 @@ const LoginComponent = (props: any) => {
           )}
 
           {/* Password  */}
-          < div className='w-full' >
+          <div className='w-full'>
             <Controller name={"password"}
               control={control}
               render={({ field: { onChange, value } }) => {
@@ -143,7 +143,7 @@ const LoginComponent = (props: any) => {
             {errors.password && errors.password.type === "pattern" && (
                 <span className="error-message text-red-400 text-xs">{"Wrong Pattern"}</span>
               )}
-          </div >
+          </div>
 
           <div className='w-full '>
             <ButtonField
