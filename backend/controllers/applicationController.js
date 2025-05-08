@@ -18,7 +18,7 @@ export async function applyForJob(req, res) {
 
 export async function getAllApplications(req, res) {
     try {
-        const applications = await Application.find().populate("applicantId", "name email");
+        const applications = await Application.find().populate("applicantId", "name email phone_number");
         if (!applications.length) {
             return res.status(404).json({ message: "Applications not found" })
         }

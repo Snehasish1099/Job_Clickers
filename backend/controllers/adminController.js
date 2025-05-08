@@ -1,4 +1,5 @@
 import User from "../models/User.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
 
 
 // Get all jobseekers & employers
@@ -6,11 +7,11 @@ export async function getAllUsers(req, res) {
   try {
     const users = await User.find({ role: { $in: ["jobseeker", "employer"] } }).select("-password");
     if (!users.length) {
-      return res.status(404).json({ message: "Users not found" })
+      return res.status(404).json(new ApiResponse(404, null, "No users found"))
     }
-    res.status(200).json({ data: users, message: "Users found" });
+    res.status(200).json(new ApiResponse(200, users, "Users found"));
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json(new ApiResponse(500, null, error.message));
   }
 }
 

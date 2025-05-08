@@ -25,8 +25,10 @@ const Header = (props: any) => {
     const token: any = typeof window !== 'undefined' && localStorage?.getItem('token')
     const role: any = typeof window !== 'undefined' && localStorage?.getItem('role');
 
-    useEffect(() => {
-        userId && getUserByIdApiCall(userId)
+    useEffect(() => { 
+        if (userId) {
+            getUserByIdApiCall(userId)
+        }
     }, [userId])
 
     const router = useRouter()
