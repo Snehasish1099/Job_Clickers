@@ -7,15 +7,14 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/src/redux/configureStore';
+import { ChatHooks } from '@/src/containers/chat/Hooks';
 // import { useRouter } from 'next/navigation';
 
 const JobDescription = (props: any) => {
-    // const router = useRouter()
 
     const singleJobDetails: any = useSelector((state: RootState) => state?.jobs?.singleJobData);
 
-    // const handleChat = (employerId: string) => {
-    // };
+    const { onMessageClick } = ChatHooks()
 
     // const handleSaveJob = () => {
     // };
@@ -96,7 +95,7 @@ const JobDescription = (props: any) => {
                     variant="outlined"
                     color="primary"
                     startIcon={<MailOutlineIcon />}
-                    // onClick={() => handleChat(singleJobDetails?.postedBy._id)} 
+                    onClick={() => onMessageClick(singleJobDetails?.postedBy)}
                     className="my-4 w-fit"
                 >
                     {"Message the Employer"}
