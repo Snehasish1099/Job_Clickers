@@ -50,12 +50,12 @@ const LandingPage = () => {
 
       {/* Right: Job Description */}
       <div className="w-[60%] overflow-y-auto p-6">
-        {open ? (
+        {open.state ? (
           <JobDescription
             handleClose={() => setOpen({ state: false, id: "" })}
           />
         ) : (
-          <div className="text-gray-500 text-center mt-20">Select a job to view its details</div>
+          <div className="text-gray-500 flex justify-center items-center text-center h-full">{"Select a job to view its details"}</div>
         )}
       </div>
     </div>

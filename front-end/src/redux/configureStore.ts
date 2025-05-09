@@ -3,11 +3,13 @@ import logger from 'redux-logger'
 import demoSlice from './demoReducer' // <--- Not for use, this is just an example
 import authReducer from '@/src/containers/authetication/authReducer'
 import jobReducer from "@/src/containers/jobs/jobReducer"
+import chatReducer from '@/src/containers/chat/chatReducer'
 
 const combinedReducer = combineReducers({
   abc: demoSlice, // <--- Not for use, this is just an example
   auth: authReducer,
-  jobs: jobReducer
+  jobs: jobReducer,
+  chat: chatReducer
 });
 
 const rootReducer = (state: any, action: any) => {

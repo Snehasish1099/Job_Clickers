@@ -25,8 +25,10 @@ const Header = (props: any) => {
     const token: any = typeof window !== 'undefined' && localStorage?.getItem('token')
     const role: any = typeof window !== 'undefined' && localStorage?.getItem('role');
 
-    useEffect(() => {
-        userId && getUserByIdApiCall(userId)
+    useEffect(() => { 
+        if (userId) {
+            getUserByIdApiCall(userId)
+        }
     }, [userId])
 
     const router = useRouter()
@@ -66,7 +68,7 @@ const Header = (props: any) => {
                 <div className={`w-1/5 flex items-center justify-between cursor-pointer relative`}>
                     <HomeIcon className='text-white' onClick={() => router?.push("/home")} />
                     <WorkIcon className='text-white' onClick={() => router?.push("/home")} />
-                    <MessageIcon className='text-white' onClick={() => router?.push("/home")} />
+                    <MessageIcon className='text-white' onClick={() => router?.push(`/chats/${userId}`)} />
                     <NotificationsIcon className='text-white' onClick={() => router?.push("/home")} />
                     <AccountCircleIcon className='text-white' onClick={() => setOpenDetails(!openDetails)} />
 
