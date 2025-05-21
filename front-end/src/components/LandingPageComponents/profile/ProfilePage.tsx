@@ -51,7 +51,8 @@ const ProfilePage = (props: any) => {
                             open={openEdit}
                             handleClose={() => setOpenEdit(false)}
                             modalCls={"!overflow-y-scroll"}
-                            titleCls={'!font-semibold'}>
+                            titleCls={'!font-semibold'}
+                        >
                             <ProfileUpdateForm />
                         </CommmonModal>
                     }

@@ -5,11 +5,13 @@ import Job from './Job.js'
 const ApplicationSchema = new Schema({
     jobId: {
         type: Schema.Types.ObjectId,
-        ref: Job, required: true
+        ref: Job, 
+        required: true
     },
     applicantId: {
         type: Schema.Types.ObjectId,
-        ref: User, required: true
+        ref: User, 
+        required: true
     },
     resume: {
         type: String,

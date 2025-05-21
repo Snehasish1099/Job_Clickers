@@ -88,15 +88,15 @@ export async function updateProfile(req, res) {
         if (name) {
             user.name = name;
         }
-        if (email) {
-            user.email = email;
-        }
-        if (phone_number) {
-            user.phone_number = phone_number;
-        }
-        if (password) {
-            user.password = await bcrypt.hash(password, 10);
-        }
+        // if (email) {
+        //     user.email = email;
+        // }
+        // if (phone_number) {
+        //     user.phone_number = phone_number;
+        // }
+        // if (password) {
+        //     user.password = await bcrypt.hash(password, 10);
+        // }
 
         if (location) {
             user.location = location;
@@ -123,7 +123,7 @@ export async function updateProfile(req, res) {
         }
 
         await user.save();
-        res.status(200).json({ message: "Profile updated successfully", user: user, status: 200 });
+        res.status(200).json({ message: "Profile updated successfully", data: user, status: 200 });
 
     } catch (error) {
         res.status(500).json({ error: error.message });

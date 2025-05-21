@@ -61,7 +61,7 @@ const JobsManagementTable = () => {
                   <TableCell>{job.location}</TableCell>
                   <TableCell>{new Date(job.createdAt).toLocaleDateString()}</TableCell>
                   <TableCell>
-                    <Box display="flex" gap={1}>
+                    <Box display="flex" gap={2} alignItems={'center'}>
                       <Button
                         variant="outlined"
                         color="primary"
@@ -79,6 +79,15 @@ const JobsManagementTable = () => {
                       >
                         Delete
                       </Button>
+
+                      <Button
+                        variant="outlined"
+                        color="success"
+                        onClick={() => router?.push(`/employer/jobs/manage/applications/${job?._id}`)}
+                      >
+                        View Applications
+                      </Button>
+
                     </Box>
                   </TableCell>
                 </TableRow>
