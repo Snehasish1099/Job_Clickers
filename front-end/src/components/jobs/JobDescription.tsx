@@ -1,6 +1,6 @@
 "use client"
 
-import React from 'react';
+import React, { useState } from 'react';
 import { IconButton, Typography, Divider, Button } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
@@ -8,16 +8,23 @@ import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/src/redux/configureStore';
 import { ChatHooks } from '@/src/containers/chat/Hooks';
+import { ApplicationHooks } from '@/src/containers/applications/Hooks';
 // import { useRouter } from 'next/navigation';
 
 const JobDescription = (props: any) => {
 
+    const [resume, setResume] = useState<File | null>(null);
+
+    const { applyForJobApiCall } = ApplicationHooks()
+
     const singleJobDetails: any = useSelector((state: RootState) => state?.jobs?.singleJobData);
+    const haveApplied: boolean = props.user_applications && props.user_applications?.some((item: any) => item?.jobId?._id === singleJobDetails?._id)
 
     const { onMessageClick } = ChatHooks()
 
     // const handleSaveJob = () => {
     // };
+
 
     if (!singleJobDetails || Object.keys(singleJobDetails)?.length === 0) return null;
 
@@ -104,29 +111,55 @@ const JobDescription = (props: any) => {
 
             <Divider />
 
+            {!haveApplied &&
+                <div className="my-4">
+                    <input
+                        id="resume-upload"
+                        type="file"
+                        accept=".pdf,.doc,.docx"
+                        style={{ display: 'none' }}
+                        onChange={(e) => setResume(e.target.files?.[0] || null)}
+                    />
+                    <label htmlFor="resume-upload">
+                        <Button variant="outlined" component="span" size="small">
+                            {resume ? "Change Resume" : "Upload Resume"}
+                        </Button>
+                    </label>
+                    {resume && (
+                        <Typography variant="caption" className="ml-2 text-gray-600">
+                            {resume.name}
+                        </Typography>
+                    )}
+                </div>}
+
             <div className="w-full my-4 flex flex-row-reverse items-end gap-5">
+
                 {/* Apply Now Button */}
                 <Button
                     variant="contained"
                     size="small"
-                    className="!bg-blue-600 hover:!bg-blue-700 !text-white"
+                    className={`${haveApplied ? "text-black bg-gray-300" : "!bg-blue-600 hover:!bg-blue-700 !text-white"}`}
+                    disabled={haveApplied}
+                    onClick={() =>
+                        applyForJobApiCall(singleJobDetails._id, resume)
+                    }
                 >
-                    {"Apply Now"}
+                    {haveApplied ? "Applied" : "Apply Now"}
                 </Button>
 
                 {/* Save Job Button */}
-                <Button
-                    variant="outlined"
-                    // color={isSaved ? "secondary" : "primary"}
-                    // onClick={handleSaveJob}
-                    size="small"
-                    className="!text-sm"
-                >
-                    {"Save Job"}
-                </Button>
+                {!haveApplied &&
+                    <Button
+                        variant="outlined"
+                        // color={isSaved ? "secondary" : "primary"}
+                        // onClick={handleSaveJob}
+                        size="small"
+                        className="!text-sm"
+                    >
+                        {"Save Job"}
+                    </Button>
+                }
             </div>
-
-
         </div>
     );
 };

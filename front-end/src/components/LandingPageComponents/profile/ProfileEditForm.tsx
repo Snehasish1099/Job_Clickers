@@ -1,220 +1,77 @@
 'use client';
 
-import React from 'react';
-import { Controller, useForm } from 'react-hook-form';
-import TextFieldInput from '@/src/common/formfields/TextFieldInput';
-import PhoneInputField from '@/src/common/formfields/PhoneInputField';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@/src/redux/configureStore';
+// import { resetForm } from '@/src/redux/profileUpdateFormReducer';
+
 import ButtonField from '@/src/common/formfields/ButtonField';
 
-const ProfileUpdateForm = (props: any) => {
-    const { control, handleSubmit, formState: { errors } } = useForm();
+import ResumeUploadForm from './ResumeUploadForm';
+import SkillsCertificationsForm from './SkillsCertificationsForm';
+import EducationWorkExperienceForm from './EducationWorkExperienceForm';
+import BasicInfoForm from './BasicInfoForm';
+import { AuthHooks } from '@/src/containers/authetication/Hooks';
+import { setInitialForm } from '@/src/redux/profileUpdateFormReducer';
 
-    const onSubmit = (data: any) => {
 
-        const formData = new FormData();
+const ProfileUpdateForm = ({ userDetails }: { userDetails: any }) => {
 
-        formData.append('name', data.name);
-        formData.append('email', data.email);
-        formData.append('phone_number', data.phone_number);
-        formData.append('location', data.location);
-        formData.append('headline', data.headline);
-        
+    const dispatch = useDispatch()
 
-        formData.append('work_experience', JSON.stringify(data.work_experience));
-        formData.append('education', JSON.stringify(data.education));
-        formData.append('skills', JSON.stringify(data.skills));
-        formData.append('certifications', JSON.stringify(data.certifications));
+    useEffect(() => {
+        if (userDetails) {
+            dispatch(setInitialForm(userDetails));
+        }
+    }, [userDetails]);
 
-        if (data.resume) {
-            formData.append('resume', data.resume);
+    const formData = useSelector((state: RootState) => state.profileUpdate);
+
+    const { updateUserByIdApiCall } = AuthHooks()
+
+    const [resume, setResume] = useState<File | any>(null)
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        const fullData = new FormData();
+        fullData.append("name", formData.name);
+        fullData.append("email", formData.email);
+        fullData.append("phone_number", formData.phone_number);
+        fullData.append("headline", formData.headline);
+        fullData.append("location", formData.location);
+
+        fullData.append("skills", JSON.stringify(formData.skills));
+        fullData.append("certifications", JSON.stringify(formData.certifications));
+        fullData.append("education", JSON.stringify(formData.education));
+        fullData.append("work_experience", JSON.stringify(formData.work_experience));
+
+        if (resume) {
+            fullData.append("resume", resume);
         }
 
-        console.log('#Updated profile data:', data);
+        updateUserByIdApiCall(fullData, userDetails?._id);
     };
 
     return (
-        <div className="flex items-center justify-center px-4">
-            <div className="w-full max-w-3xl bg-white shadow-lg rounded-2xl p-6 space-y-6">
-                <h2 className="text-2xl font-bold text-center text-blue-600">Update Profile</h2>
+        <form className="space-y-6" onSubmit={handleSubmit}>
+            <h2 className="text-xl font-bold">Update Your Profile</h2>
 
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" encType="multipart/form-data">
-                    {/* Name */}
-                    <Controller
-                        name="name"
-                        control={control}
-                        render={({ field: { onChange, value } }) => (
-                            <TextFieldInput
-                                textnewclass="w-full"
-                                floatingLabel="Full Name"
-                                value={value}
-                                onChange={onChange}
-                            />
-                        )}
-                        rules={{ required: "Name is required" }}
-                    />
-                    {errors.name && <span className="text-xs text-red-500">{errors.name.message}</span>}
+            <BasicInfoForm />
 
-                    {/* Email */}
-                    <Controller
-                        name="email"
-                        control={control}
-                        render={({ field: { onChange, value } }) => (
-                            <TextFieldInput
-                                textnewclass="w-full"
-                                floatingLabel="Email"
-                                value={value}
-                                onChange={onChange}
-                            />
-                        )}
-                        rules={{
-                            required: "Email is required",
-                            pattern: {
-                                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                                message: "Invalid email format"
-                            }
-                        }}
-                    />
-                    {errors.email && <span className="text-xs text-red-500">{errors.email.message}</span>}
+            <ResumeUploadForm resume={resume} setResume={setResume} />
 
-                    {/* Phone Number */}
-                    <Controller
-                        name="phone_number"
-                        control={control}
-                        render={({ field: { onChange, value } }) => (
-                            <PhoneInputField
-                                defaultCountry="in"
-                                label="Phone Number"
-                                value={value}
-                                onChange={onChange}
-                                extraCls="!w-full text-sm mt-[0.45rem]"
-                                inputCls="!w-full h-[3.3rem] cursor-default"
-                            />
-                        )}
-                        rules={{ required: "Phone number is required" }}
-                    />
-                    {errors.phone_number && <span className="text-xs text-red-500">{errors.phone_number.message}</span>}
+            <SkillsCertificationsForm />
 
-                    {/* Headline */}
-                    <Controller
-                        name="headline"
-                        control={control}
-                        render={({ field: { onChange, value } }) => (
-                            <TextFieldInput
-                                textnewclass="w-full"
-                                floatingLabel="Headline"
-                                value={value}
-                                onChange={onChange}
-                            />
-                        )}
-                    />
+            <EducationWorkExperienceForm />
 
-                    {/* Location */}
-                    <Controller
-                        name="location"
-                        control={control}
-                        render={({ field: { onChange, value } }) => (
-                            <TextFieldInput
-                                textnewclass="w-full"
-                                floatingLabel="Location"
-                                value={value}
-                                onChange={onChange}
-                            />
-                        )}
-                    />
-
-                    {/* Resume Upload */}
-                    <Controller
-                        name="resume"
-                        control={control}
-                        render={({ field: { onChange, value } }) => (
-                            <div className="w-full">
-                                <label className="block text-sm font-medium text-gray-700">Resume (PDF)</label>
-                                <input
-                                    type="file"
-                                    accept=".pdf"
-                                    onChange={(e) => {
-                                        onChange(e.target.files[0]);
-                                    }}
-                                    className="w-full mt-2"
-                                />
-                            </div>
-                        )}
-                    />
-
-                    {/* Skills */}
-                    <Controller
-                        name="skills"
-                        control={control}
-                        render={({ field: { onChange, value } }) => (
-                            <TextFieldInput
-                                textnewclass="w-full"
-                                floatingLabel="Skills (comma separated)"
-                                value={value}
-                                onChange={onChange}
-                            />
-                        )}
-                    />
-
-                    {/* Certifications */}
-                    <Controller
-                        name="certifications"
-                        control={control}
-                        render={({ field: { onChange, value } }) => (
-                            <TextFieldInput
-                                textnewclass="w-full"
-                                floatingLabel="Certifications (comma separated)"
-                                value={value}
-                                onChange={onChange}
-                            />
-                        )}
-                    />
-
-                    {/* Education */}
-                    <Controller
-                        name="education"
-                        control={control}
-                        render={({ field: { onChange, value } }) => (
-                            <TextFieldInput
-                                textnewclass="w-full"
-                                floatingLabel="Education Summary"
-                                value={value}
-                                onChange={onChange}
-                            />
-                        )}
-                    />
-
-                    {/* Work Experience */}
-                    <Controller
-                        name="work_experience"
-                        control={control}
-                        render={({ field: { onChange, value } }) => (
-                            <TextFieldInput
-                                textnewclass="w-full"
-                                floatingLabel="Work Experience"
-                                value={value}
-                                onChange={onChange}
-                            />
-                        )}
-                    />
-
-                    {/* Submit Button */}
-                    <div className="flex justify-between items-center">
-                        <ButtonField
-                            type="reset"
-                            variant="outlined"
-                            buttonName="Cancel"
-                            buttonextracls="w-full !px-2 !py-2 !text-white !bg-red-600"
-                        />
-                        <ButtonField
-                            type="submit"
-                            variant="contained"
-                            buttonName="Update Profile"
-                            buttonextracls="w-full !px-2 !py-2 !text-white !bg-blue-600"
-                        />
-                    </div>
-                </form>
-            </div>
-        </div>
+            <ButtonField
+                type='submit'
+                variant={'outlined'}
+                buttonName={"Update profile"}
+                buttonextracls={`w-full !px-2 !py-2 !text-white !bg-blue-600 !text-sm`}
+            />
+        </form>
     );
 };
 

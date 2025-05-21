@@ -80,7 +80,6 @@ const JobCreateForm = (props: any) => {
             rules={{ required: true }}
             render={({ field: { onChange, value } }) => (
               <TextFieldInput
-                onlyValue
                 textnewclass="w-full text-sm bg-white"
                 floatingLabel="Job Title"
                 onChange={onChange}
@@ -97,7 +96,6 @@ const JobCreateForm = (props: any) => {
             rules={{ required: true }}
             render={({ field: { onChange, value } }) => (
               <TextFieldInput
-                onlyValue
                 textnewclass="w-full text-sm bg-white"
                 floatingLabel="Company Name"
                 onChange={onChange}
@@ -114,7 +112,6 @@ const JobCreateForm = (props: any) => {
             rules={{ required: true }}
             render={({ field: { onChange, value } }) => (
               <TextFieldInput
-                onlyValue
                 textnewclass="w-full text-sm bg-white"
                 floatingLabel="Location"
                 onChange={onChange}
@@ -131,7 +128,6 @@ const JobCreateForm = (props: any) => {
             rules={{ required: true, min: 0, pattern: /^[0-9]+$/, }}
             render={({ field: { onChange, value } }) => (
               <TextFieldInput
-                onlyValue
                 textnewclass="w-full text-sm bg-white"
                 floatingLabel="Salary"
                 type="number"
@@ -167,7 +163,6 @@ const JobCreateForm = (props: any) => {
             rules={{ required: true, minLength: 20 }}
             render={({ field: { onChange, value } }) => (
               <TextFieldInput
-                onlyValue
                 multiline
                 rows={4}
                 textnewclass="w-full text-sm bg-white"

@@ -31,7 +31,7 @@ export async function updateJob(req, res) {
 
 export async function getAllJobs(req, res) {
     try {
-        const jobs = await Job.find().populate("postedBy", "name email phone_number role");
+        const jobs = await Job.find().populate("postedBy", "name email phone_number role").sort({ updatedAt: -1 });
         if (!jobs?.length) {
             return res.status(404).json({ message: "No Jobs found" })
         }

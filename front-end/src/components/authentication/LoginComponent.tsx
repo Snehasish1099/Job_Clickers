@@ -54,7 +54,6 @@ const LoginComponent = (props: any) => {
                 control={control}
                 render={({ field: { onChange, value } }) => (
                   <TextFieldInput
-                    onlyValue
                     textnewclass="w-full text-sm bg-white"
                     floatingLabel="Email"
                     value={value}
@@ -114,7 +113,6 @@ const LoginComponent = (props: any) => {
               render={({ field: { onChange, value } }) => {
                 return (
                   <TextFieldInput
-                    onlyValue
                     typePassword={showPasswoard}
                     onChange={onChange}
                     value={value}

@@ -60,7 +60,6 @@ const RegisterComponent = (props: any) => {
                 render={({ field: { onChange, value } }) => {
                   return (
                     (<TextFieldInput
-                      onlyValue
                       textnewclass={`w-full text-sm bg-white`}
                       floatingLabel='Name'
                       value={(value)}
@@ -87,7 +86,6 @@ const RegisterComponent = (props: any) => {
                 render={({ field: { onChange, value } }) => {
                   return (
                     (<TextFieldInput
-                      onlyValue
                       textnewclass={`w-full text-sm bg-white`}
                       floatingLabel='Email'
                       value={(value)}
@@ -176,7 +174,6 @@ const RegisterComponent = (props: any) => {
                 }}
                 render={({ field: { onChange, value } }) => (
                   <TextFieldInput
-                    onlyValue
                     textnewclass={`w-full text-sm bg-white`}
                     typePassword={showPassword}
                     floatingLabel="Password"
@@ -215,7 +212,6 @@ const RegisterComponent = (props: any) => {
                 }}
                 render={({ field: { onChange, value } }) => (
                   <TextFieldInput
-                    onlyValue
                     textnewclass={`w-full text-sm bg-white`}
                     floatingLabel="Confirm password"
                     typePassword={showCPassword}

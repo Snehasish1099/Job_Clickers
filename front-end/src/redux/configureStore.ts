@@ -4,12 +4,17 @@ import demoSlice from './demoReducer' // <--- Not for use, this is just an examp
 import authReducer from '@/src/containers/authetication/authReducer'
 import jobReducer from "@/src/containers/jobs/jobReducer"
 import chatReducer from '@/src/containers/chat/chatReducer'
+import applicationReducer from '@/src/containers/applications/applicationReducer'
+import profileUpdate from '@/src/redux/profileUpdateFormReducer'
 
 const combinedReducer = combineReducers({
   abc: demoSlice, // <--- Not for use, this is just an example
   auth: authReducer,
   jobs: jobReducer,
-  chat: chatReducer
+  application: applicationReducer,
+  chat: chatReducer,
+
+  profileUpdate: profileUpdate,
 });
 
 const rootReducer = (state: any, action: any) => {
