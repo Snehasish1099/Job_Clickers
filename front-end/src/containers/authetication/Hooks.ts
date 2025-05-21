@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from "react";
-import { doGetApiCall, doPostApiCall, doPutApiCall } from "../../utils/ApiConfig";
+import { doGetApiCall, doPostApiCall } from "../../utils/ApiConfig";
 import { useDispatch } from "react-redux";
 import { userDetailsReducer } from "./authReducer";
 import { useRouter } from "next/navigation";
@@ -13,7 +13,7 @@ export const AuthHooks = () => {
 
     const router = useRouter();
 
-    const [openEditProfile, setOpenEditProfile] = useState(false)
+    const [openEditProfile, setOpenEditProfile] = useState<boolean>(false)
 
     const [loginType, setLoginType] = useState<'email' | 'phone'>('email');
 
@@ -52,11 +52,11 @@ export const AuthHooks = () => {
 
         const res: any = await doPostApiCall(data)
         if (res?.status === 200) {
-            localStorage.setItem('token', res?.token)
-            localStorage.setItem('userId', res?.user?._id)
-            localStorage.setItem('role', res?.user?.role)
+            localStorage.setItem('token', res?.data?.token)
+            localStorage.setItem('userId', res?.data?.user?._id)
+            localStorage.setItem('role', res?.data?.user?.role)
 
-            getUserByIdApiCall(res?.user?._id)
+            getUserByIdApiCall(res?.data?.user?._id)
             // dispatch(snackbarOpen({ alertType: 'success', message: "Login Successful" }))
             router.push(`/home`)
         } else {
@@ -73,8 +73,8 @@ export const AuthHooks = () => {
             url: `${process.env.NEXT_PUBLIC_BASE_URL}/auth/users/${userId}`,
         }
         const res: any = await doGetApiCall(data)
-        if (res?.status === 200 || res?.message === "User found") {
-            dispatch(userDetailsReducer(res?.user))
+        if (res?.status === 200) {
+            dispatch(userDetailsReducer(res?.data))
         } else {
             dispatch(userDetailsReducer(null))
         }
@@ -85,22 +85,23 @@ export const AuthHooks = () => {
      * @description - Updates the details of an registered user
      */
     const updateUserByIdApiCall = async (formData: any, userId: string) => {
-        const data = {
-            url: `${process.env.NEXT_PUBLIC_BASE_URL}/users/${userId}`,
-            bodyData: {
-                username: formData?.userName,
-                phone_number: formData?.phone_number,
-                address: formData?.address,
+
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/users/update/${userId}`, {
+            method: "PUT",
+            body: formData,
+            headers: {
+                Authorization: `${localStorage.getItem("token")}`
             }
-        }
-        const res: any = await doPutApiCall(data)
-        if (res?.status === 200) {
-            // getUserByIdApiCall(res?.data?.id)
-            dispatch(userDetailsReducer(res?.data))
-            // dispatch(snackbarOpen({ alertType: 'success', message: "Details updated syccessfully" }))
+        });
+
+        const data = await res.json();
+
+        if (res?.status === 201) {
+            getUserByIdApiCall(userId)
+            // dispatch(userDetailsReducer(data))
             setOpenEditProfile(false)
         } else {
-            // dispatch(snackbarOpen({ alertType: 'error', message: "Details update failed" }))
+            console.log(data.error);
         }
     }
 

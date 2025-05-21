@@ -1,4 +1,3 @@
-
 'use client';
 
 import LoginComponent from '@/src/components/authentication/LoginComponent'

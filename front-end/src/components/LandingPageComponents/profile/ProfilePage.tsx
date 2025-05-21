@@ -9,7 +9,7 @@ import { useState } from 'react';
 import CommmonModal from '@/src/common/layout/CommonModal';
 import ProfileUpdateForm from './ProfileEditForm';
 
-const ProfilePage = (props: any) => {
+const ProfilePage = () => {
 
     const userDetails: any = useSelector((state: RootState) => state.auth.userDetail)
 
@@ -33,11 +33,6 @@ const ProfilePage = (props: any) => {
                 </div>
 
                 <div className="flex gap-2 mt-4 md:mt-0">
-                    {userDetails?.resume && (
-                        <Link href={userDetails?.resume} target="_blank">
-                            <Button variant="outlined" startIcon={<Download />}>Download Resume</Button>
-                        </Link>
-                    )}
                     <Button
                         variant="contained"
                         startIcon={<Edit />}
@@ -51,8 +46,11 @@ const ProfilePage = (props: any) => {
                             open={openEdit}
                             handleClose={() => setOpenEdit(false)}
                             modalCls={"!overflow-y-scroll"}
-                            titleCls={'!font-semibold'}>
-                            <ProfileUpdateForm />
+                            titleCls={'!font-semibold'}
+                        >
+                            <ProfileUpdateForm 
+                                userDetails={userDetails}
+                            />
                         </CommmonModal>
                     }
                 </div>

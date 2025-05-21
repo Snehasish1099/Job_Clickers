@@ -9,11 +9,13 @@ const style = {
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: '90%',
-    maxWidth: '500px',
+    maxWidth: '800px',
+    height: '90vh',
     bgcolor: 'background.paper',
-    border: '1px solid #000',
+    borderRadius: '12px',
     boxShadow: 24,
-    p: 4,
+    display: 'flex',
+    flexDirection: 'column',
 };
 
 const CommmonModal = (props: any) => {
@@ -25,8 +27,15 @@ const CommmonModal = (props: any) => {
             className={`!mx-auto !rounded-xl ${props.modalCls}`}
         >
             <Box sx={style}>
-                <Typography component="h2" className={props.titleCls}>{props.title}</Typography>
-                {props.children}
+                {props.title && (
+                    <Typography component="h2" className={`${props.titleCls} p-2 border-b`}>
+                        {props.title}
+                    </Typography>
+                )}
+
+                <Box sx={{ flex: 1, overflowY: 'auto', p: 2 }}>
+                    {props.children}
+                </Box>
             </Box>
         </Modal>
     );

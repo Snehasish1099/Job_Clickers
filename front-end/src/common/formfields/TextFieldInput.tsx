@@ -15,20 +15,6 @@ function TextFieldInput(props: any) {
         setAnchorEl(null);
     };
 
-    const onChange = (event: any) => {
-        const value = event.target.value
-        const finalValue = value.replace(/^\s+/g, '')
-        if (props.index > -1) {
-            props.onChange(event.target.name, finalValue, props.index);
-        }
-        else if (props.onlyValue) {
-            props.onChange(event);
-        }
-        else {
-            props.onChange(event.target.name, finalValue);
-        }
-    };
-
     const onKeyPress = (ev: any) => {
         if (ev.key === 'Enter') {
             ev.preventDefault();
@@ -79,7 +65,7 @@ function TextFieldInput(props: any) {
             ) : null}
 
             <TextField
-                onChange={props.handleChange ? props.handleChange : (e: any) => onChange(e)}
+                onChange={(event: any) => props.onChange(event)}
                 disabled={props.disabled}
                 defaultValue={props.defaultValue}
                 className={props.textnewclass}
