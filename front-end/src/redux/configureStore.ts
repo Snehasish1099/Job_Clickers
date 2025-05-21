@@ -3,6 +3,7 @@ import logger from 'redux-logger'
 import demoSlice from './demoReducer' // <--- Not for use, this is just an example
 import authReducer from '@/src/containers/authetication/authReducer'
 import jobReducer from "@/src/containers/jobs/jobReducer"
+import chatReducer from '@/src/containers/chat/chatReducer'
 import applicationReducer from '@/src/containers/applications/applicationReducer'
 import profileUpdate from '@/src/redux/profileUpdateFormReducer'
 
@@ -11,8 +12,9 @@ const combinedReducer = combineReducers({
   auth: authReducer,
   jobs: jobReducer,
   application: applicationReducer,
+  chat: chatReducer,
 
-  profileUpdate: profileUpdate
+  profileUpdate: profileUpdate,
 });
 
 const rootReducer = (state: any, action: any) => {
