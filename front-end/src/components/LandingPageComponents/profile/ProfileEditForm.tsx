@@ -1,78 +1,77 @@
 'use client';
 
-import React from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
-import { useSelector } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/src/redux/configureStore';
+// import { resetForm } from '@/src/redux/profileUpdateFormReducer';
 
-import BasicInfoForm from './BasicInfoForm';
+import ButtonField from '@/src/common/formfields/ButtonField';
+
 import ResumeUploadForm from './ResumeUploadForm';
 import SkillsCertificationsForm from './SkillsCertificationsForm';
 import EducationWorkExperienceForm from './EducationWorkExperienceForm';
-import ButtonField from '@/src/common/formfields/ButtonField';
+import BasicInfoForm from './BasicInfoForm';
+import { AuthHooks } from '@/src/containers/authetication/Hooks';
+import { setInitialForm } from '@/src/redux/profileUpdateFormReducer';
 
-const ProfileUpdateForm = () => {
-    const userDetails: any = useSelector((state: RootState) => state.auth.userDetail);
 
-    const methods = useForm({
-        defaultValues: {
-            name: userDetails?.name || '',
-            email: userDetails?.email || '',
-            phone_number: userDetails?.phone_number || '',
-            headline: userDetails?.headline || '',
-            location: userDetails?.location || '',
-            resume: null,
-            skills: [{ name: '' }],
-            certifications: [{ name: '' }],
-            education: [{ degree: '', institution: '', year: '' }],
-            work_experience: [{ company: '', role: '', duration: '' }],
-        },
-    });
+const ProfileUpdateForm = ({ userDetails }: { userDetails: any }) => {
 
-    const { handleSubmit } = methods;
+    const dispatch = useDispatch()
 
-    const onSubmit = (data: any) => {
-        const formData = new FormData();
-        Object.entries(data).forEach(([key, value]) => {
-            if (['skills', 'certifications', 'education', 'work_experience'].includes(key)) {
-                formData.append(key, JSON.stringify(value));
-            } else if (key === 'resume' && value) {
-                formData.append('resume', value);
-            } else {
-                formData.append(key, value);
-            }
-        });
+    useEffect(() => {
+        if (userDetails) {
+            dispatch(setInitialForm(userDetails));
+        }
+    }, [userDetails]);
 
-        console.log('Submitting Profile:', Object.fromEntries(formData.entries()));
-        // Call API here with formData
+    const formData = useSelector((state: RootState) => state.profileUpdate);
+
+    const { updateUserByIdApiCall } = AuthHooks()
+
+    const [resume, setResume] = useState<File | any>(null)
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        const fullData = new FormData();
+        fullData.append("name", formData.name);
+        fullData.append("email", formData.email);
+        fullData.append("phone_number", formData.phone_number);
+        fullData.append("headline", formData.headline);
+        fullData.append("location", formData.location);
+
+        fullData.append("skills", JSON.stringify(formData.skills));
+        fullData.append("certifications", JSON.stringify(formData.certifications));
+        fullData.append("education", JSON.stringify(formData.education));
+        fullData.append("work_experience", JSON.stringify(formData.work_experience));
+
+        if (resume) {
+            fullData.append("resume", resume);
+        }
+
+        updateUserByIdApiCall(fullData, userDetails?._id);
     };
 
     return (
-        <FormProvider {...methods}>
-            <form onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data" className="space-y-6 max-w-3xl mx-auto bg-white p-6 rounded-xl shadow">
-                <h2 className="text-2xl font-bold text-center text-blue-600">Update Profile</h2>
+        <form className="space-y-6" onSubmit={handleSubmit}>
+            <h2 className="text-xl font-bold">Update Your Profile</h2>
 
-                <BasicInfoForm />
-                <ResumeUploadForm />
-                <SkillsCertificationsForm />
-                <EducationWorkExperienceForm />
+            <BasicInfoForm />
 
-                <div className="flex justify-between items-center gap-4 pt-4">
-                    <ButtonField
-                        type="reset"
-                        variant="outlined"
-                        buttonName="Cancel"
-                        buttonextracls="w-full !bg-red-600 !text-white"
-                    />
-                    <ButtonField
-                        type="submit"
-                        variant="contained"
-                        buttonName="Update Profile"
-                        buttonextracls="w-full !bg-blue-600 !text-white"
-                    />
-                </div>
-            </form>
-        </FormProvider>
+            <ResumeUploadForm resume={resume} setResume={setResume} />
+
+            <SkillsCertificationsForm />
+
+            <EducationWorkExperienceForm />
+
+            <ButtonField
+                type='submit'
+                variant={'outlined'}
+                buttonName={"Update profile"}
+                buttonextracls={`w-full !px-2 !py-2 !text-white !bg-blue-600 !text-sm`}
+            />
+        </form>
     );
 };
 

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from "react";
-import { doGetApiCall, doPostApiCall, doPutApiCall } from "../../utils/ApiConfig";
+import { doGetApiCall, doPostApiCall } from "../../utils/ApiConfig";
 import { useDispatch } from "react-redux";
 import { userDetailsReducer } from "./authReducer";
 import { useRouter } from "next/navigation";
@@ -85,22 +85,23 @@ export const AuthHooks = () => {
      * @description - Updates the details of an registered user
      */
     const updateUserByIdApiCall = async (formData: any, userId: string) => {
-        const data = {
-            url: `${process.env.NEXT_PUBLIC_BASE_URL}/users/${userId}`,
-            bodyData: {
-                username: formData?.userName,
-                phone_number: formData?.phone_number,
-                address: formData?.address,
+
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/users/update/${userId}`, {
+            method: "PUT",
+            body: formData,
+            headers: {
+                Authorization: `${localStorage.getItem("token")}`
             }
-        }
-        const res: any = await doPutApiCall(data)
-        if (res?.status === 200) {
-            // getUserByIdApiCall(res?.data?.id)
-            dispatch(userDetailsReducer(res?.data))
-            // dispatch(snackbarOpen({ alertType: 'success', message: "Details updated syccessfully" }))
+        });
+
+        const data = await res.json();
+
+        if (res?.status === 201) {
+            getUserByIdApiCall(userId)
+            // dispatch(userDetailsReducer(data))
             setOpenEditProfile(false)
         } else {
-            // dispatch(snackbarOpen({ alertType: 'error', message: "Details update failed" }))
+            console.log(data.error);
         }
     }
 

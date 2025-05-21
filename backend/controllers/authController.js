@@ -1,5 +1,6 @@
 import { hash, compare } from "bcryptjs";
 import User from "../models/User.js";
+import path from 'path';
 
 import jwt from "jsonwebtoken";
 import { ApiResponse } from "../utils/ApiResponse.js";
@@ -105,16 +106,16 @@ export async function updateProfile(req, res) {
             user.headline = headline;
         }
         if (education) {
-            user.education = education;
+            user.education = JSON.parse(education);
         }
         if (work_experience) {
-            user.work_experience = work_experience;
+            user.work_experience = JSON.parse(work_experience);
         }
         if (skills) {
-            user.skills = skills;
+            user.skills = JSON.parse(skills);
         }
         if (certifications) {
-            user.certifications = certifications;
+            user.certifications = JSON.parse(certifications);
         }
 
         if (req.file) {

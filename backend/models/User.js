@@ -24,7 +24,6 @@ const UserSchema = new Schema({
     education: [{
         institution: String,
         degree: String,
-        field_of_study: String,
         start_year: Number,
         end_year: Number
     }]

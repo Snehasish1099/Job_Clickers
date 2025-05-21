@@ -1,80 +1,48 @@
-'use client';
-
 import React from 'react';
-import { useFormContext, Controller } from 'react-hook-form';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateField } from '@/src/redux/profileUpdateFormReducer';
+import { RootState } from '@/src/redux/configureStore';
 import TextFieldInput from '@/src/common/formfields/TextFieldInput';
 import PhoneInputField from '@/src/common/formfields/PhoneInputField';
 
 const BasicInfoForm = () => {
-    const { control, formState: { errors } } = useFormContext();
+    const dispatch = useDispatch();
+    const formData = useSelector((state: RootState) => state.profileUpdate);
 
     return (
         <>
-            <Controller
-                name="name"
-                control={control}
-                rules={{ required: "Name is required" }}
-                render={({ field }) => (
-                    <TextFieldInput
-                        floatingLabel="Full Name"
-                        textnewclass="w-full"
-                        {...field}
-                    />
-                )}
+            <TextFieldInput
+                floatingLabel="Full Name"
+                value={formData.name}
+                onChange={(e: any) => dispatch(updateField({ field: 'name', value: e.target.value }))}
+                textnewclass="w-full"
             />
-            {errors.name && <p className="text-xs text-red-500">{errors.name.message}</p>}
-
-            <Controller
-                name="email"
-                control={control}
-                render={({ field }) => (
-                    <TextFieldInput
-                        floatingLabel="Email"
-                        disabled
-                        textnewclass="w-full"
-                        {...field}
-                    />
-                )}
+            <TextFieldInput
+                floatingLabel="Email"
+                value={formData.email}
+                disabled
+                textnewclass="w-full"
             />
-
-            <Controller
-                name="phone_number"
-                control={control}
-                render={({ field }) => (
-                    <PhoneInputField
-                        disabled
-                        defaultCountry="in"
-                        label="Phone Number"
-                        value={field.value}
-                        onChange={field.onChange}
-                        extraCls="!w-full text-sm mt-[0.45rem]"
-                        inputCls="!w-full h-[3.3rem] cursor-default"
-                    />
-                )}
+            <PhoneInputField
+                disabled
+                defaultCountry="in"
+                label="Phone Number"
+                value={formData.phone_number}
+                onChange={(value: string) => dispatch(updateField({ field: 'phone_number', value }))}
+                extraCls="!w-full text-sm mt-[0.45rem]"
+                inputCls="!w-full h-[3.3rem] cursor-default"
             />
-
-            <Controller
-                name="headline"
-                control={control}
-                render={({ field }) => (
-                    <TextFieldInput
-                        floatingLabel="Headline"
-                        textnewclass="w-full"
-                        {...field}
-                    />
-                )}
+            <TextFieldInput
+                floatingLabel="Headline"
+                value={formData.headline}
+                onChange={(e: any) => dispatch(updateField({ field: 'headline', value: e.target.value }))}
+                textnewclass="w-full"
             />
-
-            <Controller
-                name="location"
-                control={control}
-                render={({ field }) => (
-                    <TextFieldInput
-                        floatingLabel="Location"
-                        textnewclass="w-full"
-                        {...field}
-                    />
-                )}
+            <TextFieldInput
+                floatingLabel="Location"
+                value={formData.location}
+                onChange={(e: any) => dispatch(updateField({ field: 'location', value: e.target.value }))}
+                textnewclass="w-full"
             />
         </>
     );
