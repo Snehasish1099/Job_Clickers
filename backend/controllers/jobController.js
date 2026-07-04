@@ -1,53 +1,58 @@
 import Job from "../models/Job.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
 
 export async function createJob(req, res) {
     try {
-        const job = await Job.create({ ...req.body, postedBy: req.user.userId });
+        const job = await Job.create({ ...req.body, postedBy: req.user._id });
 
-        res.status(201).json(job);
+        res.status(201).json(new ApiResponse(201, job, "Job Created successfully"));
+
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json(new ApiResponse(500, null, error.message));
     }
 }
 
 export async function updateJob(req, res) {
     try {
-      const job = await Job.findOne({ _id: req.params.jobId, postedBy: req.user.userId });
-  
-      if (!job) {
-        return res.status(404).json({ error: "Job not found or not authorized" });
-      }
-  
-      Object.assign(job, req.body);
-      await job.save();
-  
-      res.json({ message: "Job updated successfully", job });
+        const job = await Job.findOne({ _id: req.params.jobId, postedBy: req.user._id });
+
+        if (!job) {
+            return res.status(404).json(new ApiResponse(404, null, "Job not found"));
+        }
+
+        Object.assign(job, req.body);
+        await job.save();
+
+        res.status(200).json(new ApiResponse(200, job, "Job updated successfully"));
     } catch (error) {
-      res.status(500).json({ error: error.message });
+        res.status(500).json(new ApiResponse(500, null, error.message));
     }
-  }
+}
 
 export async function getAllJobs(req, res) {
     try {
-        const jobs = await Job.find().populate("postedBy", "name email phone_number");
+        const jobs = await Job.find().populate("postedBy", "name email phone_number role").sort({ updatedAt: -1 });
+        if (!jobs?.length) {
+            return res.status(404).json({ message: "No Jobs found" })
+        }
 
-        res.json(jobs);
+        res.status(200).json(new ApiResponse(200, jobs, "Jobs found"));
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json(new ApiResponse(500, null, error.message));
     }
 }
 
 export async function getJobById(req, res) {
     try {
-        const job = await Job.findById(req.params.id);
+        const job = await Job.findById(req.params.id).populate("postedBy", "name email phone_number role");
 
         if (!job) {
-            return res.status(404).json({ msg: "Job not found" });
+            return res.status(404).json(new ApiResponse(404, null, "Job not found"));
         }
-        
-        res.json(job);
+
+        res.status(200).json(new ApiResponse(200, job, "Job found"));
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json(new ApiResponse(500, null, error.message));
     }
 }
 
@@ -55,12 +60,12 @@ export async function deleteJob(req, res) {
     try {
         const job = await Job.findById(req.params.id);
         if (!job) {
-            return res.status(404).json({ msg: "Job not found" });
+            return res.status(404).json(new ApiResponse(404, null, "Job not found"));
         }
 
         await job.deleteOne();
-        res.json({ msg: "Job deleted successfully" });
+        res.status(200).json(new ApiResponse(200, null, "Job deleted successfully"));
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json(new ApiResponse(500, null, error.message));
     }
 }

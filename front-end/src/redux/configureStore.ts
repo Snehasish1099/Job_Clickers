@@ -1,12 +1,23 @@
-import { configureStore, combineReducers, AnyAction } from '@reduxjs/toolkit';
+import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import logger from 'redux-logger'
 import demoSlice from './demoReducer' // <--- Not for use, this is just an example
+import authReducer from '@/src/containers/authetication/authReducer'
+import jobReducer from "@/src/containers/jobs/jobReducer"
+import chatReducer from '@/src/containers/chat/chatReducer'
+import applicationReducer from '@/src/containers/applications/applicationReducer'
+import profileUpdate from '@/src/redux/profileUpdateFormReducer'
 
 const combinedReducer = combineReducers({
   abc: demoSlice, // <--- Not for use, this is just an example
+  auth: authReducer,
+  jobs: jobReducer,
+  application: applicationReducer,
+  chat: chatReducer,
+
+  profileUpdate: profileUpdate,
 });
 
-const rootReducer = (state: any, action: AnyAction) => {
+const rootReducer = (state: any, action: any) => {
     if (action.type === 'RESET') {
         state = {};
     }

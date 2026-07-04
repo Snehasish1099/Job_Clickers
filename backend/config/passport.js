@@ -15,19 +15,27 @@ passport.use(
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
-        const user = await User.findOneAndUpdate(
-          { googleId: profile.id },
-          {
-            $setOnInsert: {
-              name: profile.displayName,
-              email: profile.emails[0].value,
-              role: "jobseeker",
-              googleId: profile.id,
-            },
-          },
-          { upsert: true, new: true }
-        );
-        done(null, user);
+        const email = profile.emails?.[0]?.value || `${profile.id}@google.com`;
+        const user = await User.findOne({
+          $or: [{ googleId: profile.id }, ...(email ? [{ email }] : [])],
+        });
+
+        if (user) {
+          if (!user.googleId) {
+            user.googleId = profile.id;
+            await user.save();
+          }
+        } else {
+          await User.create({
+            name: profile.displayName || profile.id,
+            email,
+            role: "jobseeker",
+            googleId: profile.id,
+          });
+        }
+
+        const savedUser = user || (await User.findOne({ googleId: profile.id }));
+        done(null, savedUser);
       } catch (err) {
         done(err);
       }
@@ -46,19 +54,26 @@ passport.use(
     async (accessToken, refreshToken, profile, done) => {
       try {
         const email = profile.emails?.[0]?.value || `${profile.username}@github.com`;
-        const user = await User.findOneAndUpdate(
-          { githubId: profile.id },
-          {
-            $setOnInsert: {
-              name: profile.displayName || profile.username,
-              email,
-              role: "jobseeker",
-              githubId: profile.id,
-            },
-          },
-          { upsert: true, new: true }
-        );
-        done(null, user);
+        const user = await User.findOne({
+          $or: [{ githubId: profile.id }, { email }],
+        });
+
+        if (user) {
+          if (!user.githubId) {
+            user.githubId = profile.id;
+            await user.save();
+          }
+        } else {
+          await User.create({
+            name: profile.displayName || profile.username,
+            email,
+            role: "jobseeker",
+            githubId: profile.id,
+          });
+        }
+
+        const savedUser = user || (await User.findOne({ githubId: profile.id }));
+        done(null, savedUser);
       } catch (err) {
         done(err);
       }
@@ -68,8 +83,5 @@ passport.use(
 
 passport.serializeUser((user, done) => done(null, user.id));
 passport.deserializeUser((id, done) => User.findById(id).then(user => done(null, user)));
-
-console.log("GOOGLE_CLIENT_ID:", process.env.GOOGLE_CLIENT_ID);
-console.log("GOOGLE_CLIENT_SECRET:", process.env.GOOGLE_CLIENT_SECRET);
 
 export default passport;
