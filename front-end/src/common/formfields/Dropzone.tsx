@@ -3,7 +3,6 @@
 import { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import { Box, Typography } from "@mui/material";
-import Image from "next/image";
 import { CloudUpload } from "@mui/icons-material";
 import ButtonField from "./ButtonField";
 
@@ -53,7 +52,7 @@ const DropZone = (props: DropZoneProps) => {
                 </label>
                 {props.helperText &&
                     <div className="flex gap-4">
-                        <Image src={"help"} alt={`help`} />
+                        <CloudUpload className="!text-[#5E5E5E]" fontSize="small" />
                         <Typography component={`p`} className={`text-[#5E5E5E] text-sm font-medium`}>
                             {props.helperText}
                         </Typography>
@@ -89,8 +88,8 @@ const DropZone = (props: DropZoneProps) => {
                         <ButtonField
                             buttonextracls={`!bg-gradient-to-r from-[#2F88FF] to-[#1D68CD] hover:bg-[#1D68CD] !rounded-full !px-10 !capitalize w-[248px] h-[36px] shadow-md hover:shadow-lg ${props.dropZoneBtnCls}`}
                             extraTextCls='!text-[#F6F6F6] !font-bold !text-[16px]'
-                            startIcon={<Image src={""} width={18} height={18} alt="uploadImg" />}
-                            name={props.Btnname}
+                            startIcon={<CloudUpload fontSize="small" />}
+                            buttonName={props.Btnname}
                             type={`button`}
                             variant={`contained`}
                         />

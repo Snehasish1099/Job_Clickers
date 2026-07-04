@@ -7,7 +7,6 @@ const router = Router();
 
 router.post("/", authMiddleware, isEmployer, createJob);
 router.put("/:jobId", authMiddleware, isEmployer, updateJob);
-router.put("/:jobId", authMiddleware, isEmployer, updateJob);
 router.get("/", authMiddleware, getAllJobs);
 router.get("/:id", authMiddleware, getJobById);
 router.delete("/:id", authMiddleware, isEmployer, deleteJob);

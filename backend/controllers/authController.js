@@ -11,8 +11,8 @@ export async function registerUser(req, res) {
     console.log("register: req.body", req.body);
     const { name, email, phone_number, password, role } = req.body;
     try {
-        if (!email && !phone_number) {
-            return res.status(400).json(new ApiResponse(400, null, "Email or phone number is required"));
+        if (!email || !phone_number) {
+            return res.status(400).json(new ApiResponse(400, null, "Email and phone number are required"));
         }
 
         if (!role || !["jobseeker", "employer"].includes(role)) {
@@ -54,7 +54,7 @@ export async function loginUser(req, res) {
             return res.status(400).json(new ApiResponse(400, null, "Invalid password"))
         }
 
-        const token = sign({ userId: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: "7d" });
+        const token = sign({ _id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: "7d" });
 
         // res.status(200).json({ token, user: user, status: 200, message: 'Login Successful' });
         res.status(200).json(new ApiResponse(200, { token, user: user }, 'Login Successful'));

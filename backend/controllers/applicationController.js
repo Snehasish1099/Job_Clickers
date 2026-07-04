@@ -5,7 +5,7 @@ export async function applyForJob(req, res) {
     try {
         const alreadyApplied = await Application.findOne({
             jobId: req.params.jobId,
-            applicantId: req.user.userId
+            applicantId: req.user._id
         });
 
         if (alreadyApplied) {
@@ -14,7 +14,7 @@ export async function applyForJob(req, res) {
 
         const application = await Application.create({
             jobId: req.params.jobId,
-            applicantId: req.user.userId,
+            applicantId: req.user._id,
             resume: req.file.path
         });
 
@@ -41,7 +41,7 @@ export async function getAllApplications(req, res) {
 // Get applications by jobid (Only Employer)
 export async function getApplicationByJobId(req, res) {
     try {
-        const job = await Job.findOne({ _id: req.params.jobId, postedBy: req.user.userId });
+        const job = await Job.findOne({ _id: req.params.jobId, postedBy: req.user._id });
 
         if (!job) {
             return res.status(403).json({ error: "Not authorized" });
@@ -67,7 +67,7 @@ export async function updateApplicationStatus(req, res) {
         }
 
         const job = await Job.findById(application.jobId);
-        if (!job || job.postedBy.toString() !== req.user.userId) {
+        if (!job || job.postedBy.toString() !== req.user._id) {
             return res.status(403).json({ error: "Not authorized" });
         }
 
@@ -82,7 +82,7 @@ export async function updateApplicationStatus(req, res) {
 
 export async function getApplicationsByUserId(req, res) {
     try {
-        const applications = await Application.find({ applicantId: req.user.userId }).populate("jobId", "title company location");
+        const applications = await Application.find({ applicantId: req.user._id }).populate("jobId", "title company location");
 
         res.status(200).json({ status: 200, data: applications, message: "Your applications fetched successfully" });
     } catch (error) {

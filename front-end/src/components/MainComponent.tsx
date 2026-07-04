@@ -1,11 +1,23 @@
-import React from 'react'
+"use client"
+
+import React, { useEffect, useState } from 'react'
 import Header from './LandingPageComponents/Header'
 
 const MainComponent = ({ children }: any) => {
+    const [hydration, setHydration] = useState(false);
+
+    useEffect(() => {
+        setHydration(true);
+    }, []);
+
     return (
         <div>
-            <Header />
-            {children}
+            {hydration &&
+                <>
+                    <Header />
+                    {children}
+                </>
+            }
         </div>
     )
 }

@@ -65,7 +65,7 @@ function TextFieldInput(props: any) {
             ) : null}
 
             <TextField
-                onChange={(event: any) => props.onChange(event)}
+                onChange={props.onChange}
                 disabled={props.disabled}
                 defaultValue={props.defaultValue}
                 className={props.textnewclass}

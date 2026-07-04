@@ -1,9 +1,5 @@
-import LoginIndex from "@/src/containers/authetication/LoginIndex";
+import { redirect } from "next/navigation";
 
 export default function Home() {
-  return (
-    <div className="">
-      <LoginIndex />
-    </div>
-  );
+  redirect("/login");
 }

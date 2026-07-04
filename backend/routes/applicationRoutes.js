@@ -6,9 +6,8 @@ import upload from '../middlewares/multer.js';
 const router = Router();
 
 router.post("/:jobId/apply", authMiddleware, upload.single("resume"), applyForJob);
+router.get("/users/applied", authMiddleware, getApplicationsByUserId);
 router.get("/:jobId", authMiddleware, getApplicationByJobId);
 router.put("/:applicationId/status", authMiddleware, updateApplicationStatus);
-
-router.get("/users/applied", authMiddleware, getApplicationsByUserId);
 
 export default router;

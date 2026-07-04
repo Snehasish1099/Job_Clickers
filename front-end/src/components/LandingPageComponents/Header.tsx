@@ -61,14 +61,14 @@ const Header = (props: any) => {
                 fullWidth
                 endAdornment={<SearchOutlined />}
                 textnewclass={'bg-white w-full rounded-full'}
-                handleChange={() => props.handleChange()}
+                onChange={props.handleChange}
             />
 
             {token &&
                 <div className={`w-1/5 flex items-center justify-between cursor-pointer relative`}>
                     <HomeIcon className='text-white' onClick={() => router?.push("/home")} />
                     <WorkIcon className='text-white' onClick={() => router?.push("/home")} />
-                    <MessageIcon className='text-white' onClick={() => router?.push("/home")} />
+                    <MessageIcon className='text-white' onClick={() => router?.push(`/chats/${userId}`)} />
                     <NotificationsIcon className='text-white' onClick={() => router?.push("/home")} />
                     <AccountCircleIcon className='text-white' onClick={() => setOpenDetails(!openDetails)} />
 
