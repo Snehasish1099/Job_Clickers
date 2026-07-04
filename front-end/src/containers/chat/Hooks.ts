@@ -61,25 +61,23 @@ export const ChatHooks = () => {
         console.log(item, "# item")
 
         if (token) {
-            await getMessageListApiCall().then((res: any) => {
-                console.log(res, "# res")
+            const chats = await getMessageListApiCall();
+            console.log(chats, "# chats")
 
-                const chatData = item?.createdBy && Object?.keys(item?.createdBy)?.length > 0 && item?.createdBy?._id ?
-                    res?.result?.filter((chatItem: any) => chatItem?.participants?.some((participant: any) => participant?._id === item?.createdBy?._id))
-                    :
-                    res?.result?.filter((chatItem: any) => chatItem?.participants?.some((participant: any) => participant?._id === item?._id))
+            const chatData = item?.createdBy && Object?.keys(item?.createdBy)?.length > 0 && item?.createdBy?._id ?
+                chats?.filter((chatItem: any) => chatItem?.participants?.some((participant: any) => participant?._id === item?.createdBy?._id))
+                :
+                chats?.filter((chatItem: any) => chatItem?.participants?.some((participant: any) => participant?._id === item?._id))
 
-                console.log(chatData, '# chatData')
+            console.log(chatData, '# chatData')
 
-                if (chatData && chatData?.length > 0 && Object?.keys(chatData[0])?.length > 0 && chatData[0]?.lastMessage) {
-                    handleChatClick(chatData[0])
-                } else {
-                    handleChatClick(item?.createdBy && Object?.keys(item?.createdBy)?.length > 0 ? item?.createdBy : item)
-                }
+            if (chatData && chatData?.length > 0 && Object?.keys(chatData[0])?.length > 0 && chatData[0]?.lastMessage) {
+                handleChatClick(chatData[0])
+            } else {
+                handleChatClick(item?.createdBy && Object?.keys(item?.createdBy)?.length > 0 ? item?.createdBy : item)
+            }
 
-                router?.push(`/chats/${userId}`)
-
-            }).catch((err: any) => console.log(err))
+            router?.push(`/chats/${userId}`)
         } else {
             router?.push('/login')
         }
@@ -116,8 +114,13 @@ export const ChatHooks = () => {
             url: `${process.env.NEXT_PUBLIC_BASE_URL}/chats/all?dataPerPage=50`
         }
         const res: any = await doGetApiCall(data)
-        // chatListReducer
-        console.log(res, "# getMessageListApiCall")
+        if (res?.status === 200) {
+            dispatch(chatListReducer(res?.data))
+            return res?.data;
+        } else {
+            dispatch(chatListReducer([]))
+            return [];
+        }
     }
 
     /**
@@ -141,7 +144,13 @@ export const ChatHooks = () => {
         }
 
         const res: any = await doGetApiCall(data)
-        console.log(res, "# getChatDetailsApiCall")
+        if (res?.status === 200) {
+            dispatch(chatDetailsReducer(res?.data))
+            return res?.data;
+        } else {
+            dispatch(chatDetailsReducer([]))
+            return [];
+        }
     }
 
 
@@ -149,15 +158,14 @@ export const ChatHooks = () => {
    *@description- This function is used for chatting with others
    **/
     const readMessageStatusApiCall = async (chatId: string) => {
-        const data = {
-            url: `${process.env.NEXT_PUBLIC_BASE_URL}/chats/read/status`,
-            bodyData: {
-                chatId: parseInt(chatId),
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/chats/read/${chatId}`, {
+            method: "PATCH",
+            headers: {
+                Authorization: `${localStorage.getItem("token")}`
             }
-        }
+        });
 
-        const res: any = await doGetApiCall(data)
-        console.log(res, "# readMessageStatusApiCall")
+        return res.json();
 
     }
     return {

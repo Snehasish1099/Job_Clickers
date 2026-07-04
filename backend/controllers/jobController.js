@@ -3,7 +3,7 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 
 export async function createJob(req, res) {
     try {
-        const job = await Job.create({ ...req.body, postedBy: req.user.userId });
+        const job = await Job.create({ ...req.body, postedBy: req.user._id });
 
         res.status(201).json(new ApiResponse(201, job, "Job Created successfully"));
 
@@ -14,7 +14,7 @@ export async function createJob(req, res) {
 
 export async function updateJob(req, res) {
     try {
-        const job = await Job.findOne({ _id: req.params.jobId, postedBy: req.user.userId });
+        const job = await Job.findOne({ _id: req.params.jobId, postedBy: req.user._id });
 
         if (!job) {
             return res.status(404).json(new ApiResponse(404, null, "Job not found"));

@@ -48,19 +48,17 @@ export const getMessagesByChatId = async (req, res) => {
         const skip = (page - 1) * limit;
 
         const messages = await Message.find({ chat: chatId })
-            .populate("sender", "name email phone_number")
-            .populate("receiver", "name email phone_number")
+            .populate("from", "name email phone_number")
+            .populate("to", "name email phone_number")
             .sort({ sentAt: 1 })
             .skip(skip)
             .limit(limit);
-
-        const total = await Message.countDocuments({ chat: chatId });
 
         if (!messages.length) {
             return res.status(404).json(new ApiResponse(404, null, "No messages found."))
         }
 
-        res.status(200).json({ data: messages, total });
+        res.status(200).json(new ApiResponse(200, messages, "Messages found"));
     } catch (error) {
         res.status(500).json(new ApiResponse(500, null, error.message));
     }
@@ -81,13 +79,11 @@ export const getAllChatsByUserId = async (req, res) => {
             .skip(skip)
             .limit(limit);
 
-        const total = await Chat.countDocuments({ participants: userId });
-
         if (!chats.length) {
             return res.status(404).json(new ApiResponse(404, null, "No messages found."));
         }
 
-        res.status(200).json({ data: chats, total });
+        res.status(200).json(new ApiResponse(200, chats, "Chats found"));
     } catch (error) {
         res.status(500).json(new ApiResponse(500, null, error.message));
     }
@@ -97,14 +93,13 @@ export const markMessagesAsRead = async (req, res) => {
     try {
         const { chatId } = req.params;
 
-        const updated = await Message.updateMany(
+        await Message.updateMany(
             { chat: chatId },
             { $set: { readStatus: true } }
         );
 
-        res.status(200).json({ message: "Messages marked as read." });
+        res.status(200).json(new ApiResponse(200, null, "Messages marked as read."));
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
-

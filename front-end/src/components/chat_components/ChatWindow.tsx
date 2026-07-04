@@ -53,7 +53,7 @@ const ChatWindow = (props: any) => {
                     <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
                         <ListItem>
                             <ListItemAvatar>
-                                <Avatar src={``} alt={`Profile image`} />
+                                <Avatar alt={`Profile image`} />
                             </ListItemAvatar>
                             <ListItemText
                                 className={`space-y-2`}
@@ -77,21 +77,21 @@ const ChatWindow = (props: any) => {
             <Box className={`mt-5 px-5 h-[55vh] overflow-y-auto !overflow-x-hidden`}>
                 {props.userChats && props.userChats?.length > 0 && props.userChats?.map((data: any, idx: number) =>
                     <Box key={idx} className={`space-y-1`}>
-                        <Box className={`flex mt-5 ${data?.sender?._id === userId && `!justify-end`}`}>
-                            {data?.sender?._id !== userId &&
+                        <Box className={`flex mt-5 ${data?.from?._id === userId && `!justify-end`}`}>
+                            {data?.from?._id !== userId &&
                                 <Box className={`relative`}>
                                     <StyledBadge
                                         overlap="circular"
                                         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                                         variant="dot"
                                     >
-                                        <Avatar src={``} alt={`profile`} />
+                                        <Avatar alt={`profile`} />
                                     </StyledBadge>
                                 </Box>
                             }
                             <Box className={`flex !flex-col`} gap={1}>
                                 <Box className={`space-y-1`} >
-                                    <Box className={`flex items-center ${chatBoxCls} ${data.sender?._id === userId ? `bg-[#25AFF2] !text-white` : `bg-[#ECF7FE] !text-[#354052]`}`}>
+                                    <Box className={`flex items-center ${chatBoxCls} ${data.from?._id === userId ? `bg-[#25AFF2] !text-white` : `bg-[#ECF7FE] !text-[#354052]`}`}>
                                         <Typography component={`p`} className={`space-y-1 ${chatCls}`}>
                                             {data?.message}
                                         </Typography>
@@ -100,9 +100,9 @@ const ChatWindow = (props: any) => {
                             </Box>
 
                         </Box>
-                        <Box className={`flex w-full ${data?.receiver?._id === userId ? `!ms-12 !justify-start` : `!justify-end !pr-2`}`}>
+                        <Box className={`flex w-full ${data?.to?._id === userId ? `!ms-12 !justify-start` : `!justify-end !pr-2`}`}>
                             <Typography component={`p`} className={`!font-[InterRegular] !text-[12px] !leading-[13px] !text-[#919BB0]`}>
-                                {data?.readStatus && data?.receiver?._id === userId && `Seen`}&nbsp;
+                                {data?.readStatus && data?.from?._id === userId && `Seen`}&nbsp;
                                 {data?.sentAt ? `${new Date(data?.sentAt)?.toLocaleString()}` : 'N/A'}
                             </Typography>
                         </Box>

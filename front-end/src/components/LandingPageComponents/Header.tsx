@@ -61,7 +61,7 @@ const Header = (props: any) => {
                 fullWidth
                 endAdornment={<SearchOutlined />}
                 textnewclass={'bg-white w-full rounded-full'}
-                handleChange={() => props.handleChange()}
+                onChange={props.handleChange}
             />
 
             {token &&

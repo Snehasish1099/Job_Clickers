@@ -39,7 +39,7 @@ const ChatList = (props: any) => {
                         }}
                     >
                         <ListItemAvatar>
-                            <Avatar src={``} alt={`avatar`} />
+                            <Avatar alt={`avatar`} />
                         </ListItemAvatar>
                         <ListItemText
                             className={`!space-y-1`}
@@ -59,15 +59,15 @@ const ChatList = (props: any) => {
                                 )
                             }
                             secondary={
-                                data?.participants?.filter((item: any) => item?._id !== userId('userId'))?.map((partItem: any, key: number) =>
+                                data?.participants?.filter((item: any) => item?._id !== userId)?.map((partItem: any, key: number) =>
                                     <Box key={key} className={`space-y-2`}>
                                         <Typography component={`p`} className={`!text-[#828282] !text-[9px] !font-[InterMedium] !leading-[9px]`}>
                                             {partItem?.email ?? 'N/A'}
                                         </Typography>
                                         {data.isNew &&
                                             <Box display="flex" gap={2}>
-                                                <ButtonField buttonextracls={`${btnCls} !bg-[#25AFF2]`} variant={`contained`} name={`accept`} />
-                                                <ButtonField buttonextracls={`${btnCls} !bg-[#F23F42]`} variant={`contained`} name={`reject`} />
+                                                <ButtonField buttonextracls={`${btnCls} !bg-[#25AFF2]`} variant={`contained`} buttonName={`accept`} />
+                                                <ButtonField buttonextracls={`${btnCls} !bg-[#F23F42]`} variant={`contained`} buttonName={`reject`} />
                                             </Box>
                                         }
                                     </Box>

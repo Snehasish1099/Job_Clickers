@@ -96,9 +96,8 @@ export const AuthHooks = () => {
 
         const data = await res.json();
 
-        if (res?.status === 201) {
+        if (res?.status === 200) {
             getUserByIdApiCall(userId)
-            // dispatch(userDetailsReducer(data))
             setOpenEditProfile(false)
         } else {
             console.log(data.error);

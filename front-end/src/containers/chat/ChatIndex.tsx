@@ -2,15 +2,17 @@
 
 import ChatList from '@/src/components/chat_components/ChatList'
 import { Box, Grid } from '@mui/material'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { ChatHooks } from './Hooks'
 import ChatWindow from '@/src/components/chat_components/ChatWindow';
 
 const ChatIndex = () => {
 
-  const { chatList, openChatWindow, handleChatClick, chatDetail, saveAccData, postMessageApiCall, text, handleTextChange } = ChatHooks()
+  const { chatList, openChatWindow, handleChatClick, chatDetail, saveAccData, postMessageApiCall, text, handleTextChange, getMessageListApiCall } = ChatHooks()
 
-  console.log(openChatWindow, "# openChatWindow")
+  useEffect(() => {
+    getMessageListApiCall()
+  }, [])
 
   return (
     <Box className={`w-full`}>
@@ -24,7 +26,6 @@ const ChatIndex = () => {
         </Grid>
         <Grid size={{ xs: 8 }}>
           {openChatWindow?.open &&
-            //  chatDetail?.every((item: any) => item?.chat === openChatWindow?.clickedId) &&
             <ChatWindow
               saveAccData={saveAccData}
               userChats={chatDetail}
