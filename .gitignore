@@ -41,3 +41,4 @@ yarn-error.log*
 next-env.d.ts
 backend/node_modules
 front-end/node_modules
+.contexts/

@@ -11,13 +11,15 @@ const MainComponent = ({ children }: any) => {
     }, []);
 
     return (
-        <div>
-            {hydration &&
+        <div className="app-shell min-h-screen">
+            {hydration && (
                 <>
                     <Header />
-                    {children}
+                    <main className="mx-auto w-full">
+                        {children}
+                    </main>
                 </>
-            }
+            )}
         </div>
     )
 }

@@ -36,8 +36,8 @@ const ChatWindow = (props: any) => {
         },
     }));
 
-    const chatBoxCls = `!h-fit  px-5 rounded-3xl !w-[fit] !max-w-[30em] !py-2`
-    const chatCls = `!font-[InterRegular] !text-[14.5px] !leading-[21.75px]`
+    const chatBoxCls = `!h-fit px-5 rounded-3xl !w-[fit] !max-w-[32em] !py-3`
+    const chatCls = `!text-[14px] !leading-[22px]`
 
     const messagesEndRef = useRef<null | HTMLDivElement>(null);
 
@@ -46,38 +46,46 @@ const ChatWindow = (props: any) => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
     }
 
+    const sendMessage = async () => {
+        if (props.text !== '') {
+            await props.sendMessageAndRefresh(props.saveAccData?.userId, props.text)
+        }
+    }
+
     return (
-        <Box className={`bg-white relative`}>
-            <Box className={`h-[5rem] flex items-center`}>
-                <Box className={`!w-full flex justify-between items-center shadow-lg px-5`}>
-                    <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+        <Box className={`relative flex h-full flex-col bg-gradient-to-br from-white via-slate-50 to-blue-50/30`}>
+            <Box className={`border-b border-slate-200 bg-white/80 px-5 py-4 backdrop-blur`}>
+                <Box className={`flex items-center justify-between gap-4`}>
+                    <List sx={{ width: '100%', maxWidth: 420, bgcolor: 'transparent', p: 0 }}>
                         <ListItem>
                             <ListItemAvatar>
-                                <Avatar alt={`Profile image`} />
+                                <Avatar alt={`Profile image`} sx={{ bgcolor: '#1d4ed8', color: '#fff' }}>
+                                    {props.saveAccData && Object.keys(props.saveAccData)?.length > 0 ? props.saveAccData?.name?.[0]?.toUpperCase() : 'J'}
+                                </Avatar>
                             </ListItemAvatar>
                             <ListItemText
                                 className={`space-y-2`}
                                 primary={
-                                    <Typography component={`p`} className={`!text-[13px] !leading-[13px] !text-[#333333] !font-[InterSemiBold]`}>
+                                    <Typography component={`p`} className={`!text-[13px] !leading-[13px] !text-slate-900 !font-semibold`}>
                                         {props.saveAccData && Object?.keys(props.saveAccData)?.length > 0 ? props.saveAccData?.name : `Albert S. Gilbert`}
                                     </Typography>
                                 }
                                 secondary={
-                                    <Typography component={`p`} className={`!text-[12px] !leading-[9px] !text-[#828282] !font-[InterMedium]`}>
-                                        {`Last seen 3 hours ago`}
+                                    <Typography component={`p`} className={`!text-[12px] !leading-[9px] !text-slate-500`}>
+                                        {`Last seen recently`}
                                     </Typography>
                                 }
                             />
                         </ListItem>
                     </List>
-                    <KeyboardArrowDown className={`!cursor-pointer`} />
+                    <KeyboardArrowDown className={`!cursor-pointer !text-slate-500`} />
                 </Box>
             </Box>
 
-            <Box className={`mt-5 px-5 h-[55vh] overflow-y-auto !overflow-x-hidden`}>
+            <Box className={`flex-1 px-5 py-5 overflow-y-auto !overflow-x-hidden`}>
                 {props.userChats && props.userChats?.length > 0 && props.userChats?.map((data: any, idx: number) =>
                     <Box key={idx} className={`space-y-1`}>
-                        <Box className={`flex mt-5 ${data?.from?._id === userId && `!justify-end`}`}>
+                        <Box className={`flex mt-4 ${data?.from?._id === userId && `!justify-end`}`}>
                             {data?.from?._id !== userId &&
                                 <Box className={`relative`}>
                                     <StyledBadge
@@ -91,7 +99,7 @@ const ChatWindow = (props: any) => {
                             }
                             <Box className={`flex !flex-col`} gap={1}>
                                 <Box className={`space-y-1`} >
-                                    <Box className={`flex items-center ${chatBoxCls} ${data.from?._id === userId ? `bg-[#25AFF2] !text-white` : `bg-[#ECF7FE] !text-[#354052]`}`}>
+                                    <Box className={`flex items-center ${chatBoxCls} ${data.from?._id === userId ? `bg-slate-900 !text-white` : `bg-white !text-slate-800 border border-slate-200`}`}>
                                         <Typography component={`p`} className={`space-y-1 ${chatCls}`}>
                                             {data?.message}
                                         </Typography>
@@ -101,7 +109,7 @@ const ChatWindow = (props: any) => {
 
                         </Box>
                         <Box className={`flex w-full ${data?.to?._id === userId ? `!ms-12 !justify-start` : `!justify-end !pr-2`}`}>
-                            <Typography component={`p`} className={`!font-[InterRegular] !text-[12px] !leading-[13px] !text-[#919BB0]`}>
+                            <Typography component={`p`} className={`!text-[12px] !leading-[13px] !text-slate-500`}>
                                 {data?.readStatus && data?.from?._id === userId && `Seen`}&nbsp;
                                 {data?.sentAt ? `${new Date(data?.sentAt)?.toLocaleString()}` : 'N/A'}
                             </Typography>
@@ -112,7 +120,7 @@ const ChatWindow = (props: any) => {
             </Box>
 
             {/* Text field to send messages  */}
-            <Box className={`absolute bottom-0 px-5 !py-2 w-full z-10 bg-white !border-t`}>
+            <Box className={`border-t border-slate-200 bg-white/85 px-5 py-4 backdrop-blur`}>
                 <Box className={`flex items-center relative !h-full`}>
                     <TextFieldInput
                         onlyValue
@@ -126,22 +134,16 @@ const ChatWindow = (props: any) => {
                         onChange={props.handleTextChange}
                         value={props.text}
                         clickEnter={() => {
-                            if (props.text !== '') {
-                                props.postMessageApiCall(props.saveAccData?.userId, props.text)
-                            }
+                            sendMessage()
                         }}
                     />
                     <Box className={`flex items-center absolute !right-2 !h-full`} gap={2}>
                         <AttachFile className={`cursor-pointer`} />
-                        <Box className={`flex items-center w-full bg-[#25AFF2] !rounded-full p-2 cursor-pointer`}>
+                        <Box className={`flex items-center w-full rounded-full bg-slate-900 p-2 cursor-pointer transition-colors hover:bg-slate-800`}>
                             <SendRounded
                                 className={`!text-white`}
                                 fontSize='small'
-                                onClick={() => {
-                                    if (props.text !== '') {
-                                        props.postMessageApiCall(props.saveAccData?.userId, props.text)
-                                    }
-                                }}
+                                onClick={sendMessage}
                             />
                         </Box>
                     </Box>
