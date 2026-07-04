@@ -1,10 +1,7 @@
-import { Avatar, Box, List, ListItem, ListItemAvatar, ListItemText, Typography } from '@mui/material'
+import { Avatar, Box, Chip, List, ListItem, ListItemAvatar, ListItemText, Typography } from '@mui/material'
 import React from 'react'
-import ButtonField from '@/src/common/formfields/ButtonField'
 
 const ChatList = (props: any) => {
-
-    const btnCls = `!w-fit !rounded-full !text-white !px-2 !capitalize !text-xs`
 
     const userId: any = typeof window !== 'undefined' && localStorage?.getItem('userId')
 
@@ -26,33 +23,42 @@ const ChatList = (props: any) => {
         }
     }
 
-    return (
-        <Box className={`bg-[#F9FBFC] !shadow !px-1`}>
+    const initials = (name?: string) => {
+        if (!name) return 'JC';
+        return name.split(' ').filter(Boolean).slice(0, 2).map(part => part[0]?.toUpperCase()).join('');
+    }
 
-            <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+    return (
+        <Box className="flex h-full flex-col border-b border-slate-200 bg-white/80 lg:border-b-0 lg:border-r">
+            <div className="border-b border-slate-100 px-5 py-5">
+                <p className="text-xs font-semibold uppercase tracking-[0.32em] text-blue-600">Messages</p>
+                <h2 className="mt-2 text-2xl font-bold tracking-tight text-slate-900">Inbox</h2>
+                <p className="mt-1 text-sm text-slate-500">Recent conversations and unread threads.</p>
+            </div>
+
+            <List sx={{ width: '100%', flex: 1, overflowY: 'auto', bgcolor: 'transparent', p: 1.5 }}>
                 {props.listData && props.listData?.length > 0 ? props.listData?.slice()?.sort((a: any, b: any) => b?.lastMessage?.sentAt - a?.lastMessage?.sentAt)?.map((data: any, idx: number) =>
                     <ListItem
                         key={idx}
-                        className={`${data.isNew ? `bg-[#DCE2F9]` : `${data?._id === props.openChatWindow?.clickedId ? `!bg-[#30323F] !text-white` : ``} hover:!bg-[#30323F] hover:!text-white !mb-2 !shadow-md !rounded-lg cursor-pointer`}`}
+                        className={`${data?._id === props.openChatWindow?.clickedId ? `!bg-slate-900 !text-white` : `!bg-white hover:!bg-slate-50`} !mb-2 !rounded-[1.4rem] !border !border-slate-200 !shadow-sm cursor-pointer transition-colors`}
                         onClick={() => {
                             props.handleChatClick(data)
                         }}
                     >
                         <ListItemAvatar>
-                            <Avatar alt={`avatar`} />
+                            <Avatar alt={`avatar`} sx={{ bgcolor: data?._id === props.openChatWindow?.clickedId ? '#fff' : '#1d4ed8', color: data?._id === props.openChatWindow?.clickedId ? '#0f172a' : '#fff' }}>
+                                {initials(data?.participants?.filter((item: any) => item?._id !== userId)?.[0]?.name)}
+                            </Avatar>
                         </ListItemAvatar>
                         <ListItemText
                             className={`!space-y-1`}
                             primary={
                                 data?.participants?.filter((item: any) => item?._id !== userId)?.map((partItem: any, key: number) =>
                                     <Box display="flex" alignItems="center" justifyContent="space-between" key={key} className={`!w-full`}>
-                                        <Typography component={`p`} className={`!text-[11.5px] !leading-[11.5px] !font-[InterSemiBold]`}>
+                                        <Typography component={`p`} className={`!text-[13px] !leading-[13px] !font-semibold`}>
                                             {partItem?.name ?? 'N/A'}
                                         </Typography>
-                                        <Typography component={`p`} className={`!text-[10px]`}>
-                                            {data.isNew && <Typography component={`span`} className={`!text-[11px] !leading-[11px] !font[InterMedium] `}>
-                                                Today at &nbsp;
-                                            </Typography>}
+                                        <Typography component={`p`} className={`!text-[11px] ${data?._id === props.openChatWindow?.clickedId ? '!text-slate-200' : '!text-slate-500'}`}>
                                             {data?.lastMessage ? dateDiffInDays(data?.lastMessage?.sentAt, true) : 'N/A'}
                                         </Typography>
                                     </Box>
@@ -61,22 +67,24 @@ const ChatList = (props: any) => {
                             secondary={
                                 data?.participants?.filter((item: any) => item?._id !== userId)?.map((partItem: any, key: number) =>
                                     <Box key={key} className={`space-y-2`}>
-                                        <Typography component={`p`} className={`!text-[#828282] !text-[9px] !font-[InterMedium] !leading-[9px]`}>
+                                        <Typography component={`p`} className={`!mt-1 !text-[12px] ${data?._id === props.openChatWindow?.clickedId ? '!text-slate-200' : '!text-slate-500'}`}>
                                             {partItem?.email ?? 'N/A'}
                                         </Typography>
-                                        {data.isNew &&
-                                            <Box display="flex" gap={2}>
-                                                <ButtonField buttonextracls={`${btnCls} !bg-[#25AFF2]`} variant={`contained`} buttonName={`accept`} />
-                                                <ButtonField buttonextracls={`${btnCls} !bg-[#F23F42]`} variant={`contained`} buttonName={`reject`} />
-                                            </Box>
-                                        }
+                                        <Chip
+                                            size="small"
+                                            label={data?.lastMessage?.message ? data.lastMessage.message.slice(0, 45) : 'No messages yet'}
+                                            className={`!mt-2 !max-w-full !rounded-full ${data?._id === props.openChatWindow?.clickedId ? '!bg-white/10 !text-white' : '!bg-slate-100 !text-slate-600'}`}
+                                        />
                                     </Box>
                                 )
                             }
                         />
                     </ListItem>)
                     :
-                    "No Chat List"
+                    <div className="px-5 py-10 text-center">
+                        <p className="text-sm font-medium text-slate-900">No conversations yet</p>
+                        <p className="mt-1 text-xs text-slate-500">Start a chat from a job or employer profile.</p>
+                    </div>
                 }
             </List>
         </Box>

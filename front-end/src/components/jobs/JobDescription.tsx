@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState } from 'react';
-import { IconButton, Typography, Divider, Button } from '@mui/material';
+import { IconButton, Typography, Divider, Button, Chip, Stack } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
@@ -29,136 +29,120 @@ const JobDescription = (props: any) => {
     if (!singleJobDetails || Object.keys(singleJobDetails)?.length === 0) return null;
 
     return (
-        <div className="w-full space-y-4">
-            {/* Header */}
-            <div className="mb-4 flex justify-between items-center">
-                <div>
-                    <h2 className="text-2xl font-semibold">{singleJobDetails?.title}</h2>
-                    <h4 className='text-sm text-gray-600'>Posted on: {new Date(singleJobDetails?.createdAt).toLocaleString()}</h4>
-                </div>
-                <IconButton onClick={props.handleClose}>
-                    <CloseIcon />
-                </IconButton>
-            </div>
-
-            <Divider />
-
-            {/* Company Name and Location */}
-            <div className='my-4'>
-                <Typography variant="h5" className="font-medium text-gray-700">
-                    {singleJobDetails?.company}
-                </Typography>
-
-                <div className="flex items-center gap-1 text-sm text-gray-600">
-                    <LocationOnIcon fontSize="small" />
-                    <span>{singleJobDetails?.location}</span>
+        <div className="h-full overflow-y-auto bg-gradient-to-br from-white via-slate-50 to-blue-50/40">
+            <div className="border-b border-slate-200 bg-white/80 px-6 py-5 backdrop-blur">
+                <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+                    <div>
+                        <p className="text-xs font-semibold uppercase tracking-[0.32em] text-blue-600">Job details</p>
+                        <h2 className="mt-2 text-3xl font-bold tracking-tight text-slate-900">{singleJobDetails?.title}</h2>
+                        <div className="mt-3 flex flex-wrap items-center gap-2">
+                            <Chip label={singleJobDetails?.company} className="!bg-slate-100 !font-semibold !text-slate-700" />
+                            <Chip label={singleJobDetails?.job_type || "Full time"} className="!bg-blue-50 !font-semibold !text-blue-700" />
+                            <Chip label={haveApplied ? 'Application submitted' : 'Open role'} className="!bg-emerald-50 !font-semibold !text-emerald-700" />
+                        </div>
+                    </div>
+                    <IconButton onClick={props.handleClose} className="!h-11 !w-11 !border !border-slate-200 !bg-white !shadow-sm">
+                        <CloseIcon />
+                    </IconButton>
                 </div>
             </div>
 
-            <Divider />
+            <div className="space-y-6 px-6 py-6">
+                <section className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-sm">
+                    <div className="flex flex-wrap items-center gap-3 text-sm text-slate-600">
+                        <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-3 py-1">
+                            <LocationOnIcon fontSize="small" />
+                            {singleJobDetails?.location}
+                        </span>
+                        <span className="rounded-full bg-blue-50 px-3 py-1 font-semibold text-blue-700">
+                            Upto Rs. {singleJobDetails?.salary || 'N/A'}
+                        </span>
+                        <span>Posted on {new Date(singleJobDetails?.createdAt).toLocaleDateString()}</span>
+                    </div>
 
-            {/* Job Description */}
-            <div className='my-4'>
-                <Typography variant="h6" className="font-semibold text-gray-800">
-                    Job Description
-                </Typography>
-                <Typography variant="body1" className="text-gray-700 whitespace-pre-wrap">
-                    {singleJobDetails?.description}
-                </Typography>
-            </div>
+                    <Typography variant="body1" className="!mt-5 !leading-8 !text-slate-700 whitespace-pre-wrap">
+                        {singleJobDetails?.description}
+                    </Typography>
+                </section>
 
-            <Divider />
-
-            {/* Salary Section */}
-            <div className='my-4'>
-                <Typography variant="h6" className="font-semibold text-gray-800">
-                    Salary Compensation
-                </Typography>
-                {singleJobDetails?.salary &&
-                    <Typography variant="body1" className="text-gray-700 whitespace-pre-wrap">
-                        {"Upto Rs."}&nbsp;{singleJobDetails?.salary}
-                    </Typography>}
-            </div>
-
-            <Divider />
-
-            {/* Employer Details Section */}
-            <div className="my-4 flex flex-col gap-3">
-                <Typography variant="h6" className="font-medium text-gray-700">
-                    Employer Details:
-                </Typography>
-                <Typography variant="body2" className="text-gray-600">
-                    <strong>Name:</strong> {singleJobDetails?.postedBy.name}
-                </Typography>
-                <Typography variant="body2" className="text-gray-600">
-                    <strong>Email:</strong> {singleJobDetails?.postedBy.email}
-                </Typography>
-                <Typography variant="body2" className="text-gray-600">
-                    <strong>Phone:</strong> {singleJobDetails?.postedBy.phone_number}
-                </Typography>
-
-                {/* Contact Employer Button */}
-                <Button
-                    variant="outlined"
-                    color="primary"
-                    startIcon={<MailOutlineIcon />}
-                    onClick={() => onMessageClick(singleJobDetails?.postedBy)}
-                    className="my-4 w-fit"
-                >
-                    {"Message the Employer"}
-                </Button>
-            </div>
-
-            <Divider />
-
-            {!haveApplied &&
-                <div className="my-4">
-                    <input
-                        id="resume-upload"
-                        type="file"
-                        accept=".pdf,.doc,.docx"
-                        style={{ display: 'none' }}
-                        onChange={(e) => setResume(e.target.files?.[0] || null)}
-                    />
-                    <label htmlFor="resume-upload">
-                        <Button variant="outlined" component="span" size="small">
-                            {resume ? "Change Resume" : "Upload Resume"}
-                        </Button>
-                    </label>
-                    {resume && (
-                        <Typography variant="caption" className="ml-2 text-gray-600">
-                            {resume.name}
+                <section className="grid gap-4 lg:grid-cols-[1fr_320px]">
+                    <div className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-sm">
+                        <Typography variant="h6" className="!font-semibold !text-slate-900">
+                            Employer details
                         </Typography>
-                    )}
-                </div>}
+                        <Stack spacing={1.25} className="!mt-4">
+                            <Typography variant="body2" className="!text-slate-600">
+                                <strong>Name:</strong> {singleJobDetails?.postedBy?.name}
+                            </Typography>
+                            <Typography variant="body2" className="!text-slate-600">
+                                <strong>Email:</strong> {singleJobDetails?.postedBy?.email}
+                            </Typography>
+                            <Typography variant="body2" className="!text-slate-600">
+                                <strong>Phone:</strong> {singleJobDetails?.postedBy?.phone_number || 'N/A'}
+                            </Typography>
+                        </Stack>
 
-            <div className="w-full my-4 flex flex-row-reverse items-end gap-5">
+                        <Button
+                            variant="contained"
+                            startIcon={<MailOutlineIcon />}
+                            onClick={() => onMessageClick(singleJobDetails?.postedBy)}
+                            className="!mt-5 !rounded-full !bg-slate-900 !px-5 !py-2.5 !text-white hover:!bg-slate-800"
+                        >
+                            Message the employer
+                        </Button>
+                    </div>
 
-                {/* Apply Now Button */}
-                <Button
-                    variant="contained"
-                    size="small"
-                    className={`${haveApplied ? "text-black bg-gray-300" : "!bg-blue-600 hover:!bg-blue-700 !text-white"}`}
-                    disabled={haveApplied}
-                    onClick={() =>
-                        applyForJobApiCall(singleJobDetails._id, resume)
-                    }
-                >
-                    {haveApplied ? "Applied" : "Apply Now"}
-                </Button>
+                    <div className="rounded-[1.75rem] border border-blue-100 bg-blue-50/70 p-6 shadow-sm">
+                        <Typography variant="h6" className="!font-semibold !text-slate-900">
+                            Apply now
+                        </Typography>
+                        <Typography variant="body2" className="!mt-2 !text-slate-600">
+                            Upload a resume and submit your application in one step.
+                        </Typography>
 
-                {/* Save Job Button */}
-                {!haveApplied &&
-                    <Button
-                        variant="outlined"
-                        // color={isSaved ? "secondary" : "primary"}
-                        // onClick={handleSaveJob}
-                        size="small"
-                        className="!text-sm"
-                    >
-                        {"Save Job"}
-                    </Button>
-                }
+                        {!haveApplied && (
+                            <div className="mt-5">
+                                <input
+                                    id="resume-upload"
+                                    type="file"
+                                    accept=".pdf,.doc,.docx"
+                                    style={{ display: 'none' }}
+                                    onChange={(e) => setResume(e.target.files?.[0] || null)}
+                                />
+                                <label htmlFor="resume-upload">
+                                    <Button variant="outlined" component="span" className="!rounded-full !border-slate-300 !bg-white !text-slate-700">
+                                        {resume ? "Change resume" : "Upload resume"}
+                                    </Button>
+                                </label>
+                                {resume && (
+                                    <Typography variant="caption" className="ml-3 text-slate-600">
+                                        {resume.name}
+                                    </Typography>
+                                )}
+                            </div>
+                        )}
+
+                        <div className="mt-5 flex flex-wrap gap-3">
+                            <Button
+                                variant="contained"
+                                className={`${haveApplied ? "!bg-slate-300 !text-slate-600" : "!bg-blue-600 hover:!bg-blue-700 !text-white"} !rounded-full !px-5 !py-2.5`}
+                                disabled={haveApplied}
+                                onClick={() => applyForJobApiCall(singleJobDetails._id, resume)}
+                            >
+                                {haveApplied ? "Applied" : "Apply now"}
+                            </Button>
+
+                            {!haveApplied &&
+                                <Button
+                                    variant="outlined"
+                                    className="!rounded-full !border-slate-300 !text-slate-700"
+                                >
+                                    Save job
+                                </Button>
+                            }
+                        </div>
+                    </div>
+                </section>
             </div>
         </div>
     );

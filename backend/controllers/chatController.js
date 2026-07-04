@@ -34,7 +34,7 @@ export const sendMessage = async (req, res) => {
             updatedAt: new Date(),
         });
 
-        res.status(201).json(new ApiResponse(201, newMessage, "Message sent"))
+        res.status(201).json(new ApiResponse(201, { ...newMessage.toObject(), chatId: chat._id }, "Message sent"))
     } catch (error) {
         res.status(500).json(new ApiResponse(500, null, error.message))
     }

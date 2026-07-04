@@ -21,6 +21,17 @@ export const ChatHooks = () => {
         setText(e.target.value)
     }
 
+    const getChatByParticipant = (chats: any[], receiverId: string) => {
+        if (!Array.isArray(chats)) {
+            return null;
+        }
+
+        return chats.find((chat: any) => {
+            const participants = chat?.participants || [];
+            return participants.some((participant: any) => participant?._id === userId || participant?._id === receiverId);
+        }) || null;
+    }
+
     // For saving the data of a chat when any of the chats is clicked 
     const saveAccData: any = useSelector((state: RootState) => state?.chat?.accData)
     const openChatWindow: any = useSelector((state: RootState) => state?.chat?.openChatWindow)
@@ -102,7 +113,7 @@ export const ChatHooks = () => {
             }
         }
         const res: any = await doPostApiCall(data)
-        console.log(res, "# postMessageApiCall")
+        return res;
     }
 
 
@@ -121,6 +132,35 @@ export const ChatHooks = () => {
             dispatch(chatListReducer([]))
             return [];
         }
+    }
+
+    const syncActiveThread = async (receiverId?: string) => {
+        if (!receiverId) {
+            return null;
+        }
+
+        const chats = await getMessageListApiCall();
+        const activeChat = getChatByParticipant(chats, receiverId);
+
+        if (activeChat?._id) {
+            dispatch(setOpenChatWindowReducer({ open: true, clickedId: activeChat._id }))
+            await getChatDetailsApiCall(activeChat._id)
+            await readMessageStatusApiCall(activeChat._id)
+        }
+
+        return activeChat;
+    }
+
+    const sendMessageAndRefresh = async (receiverId: string, messageText: string) => {
+        const trimmedText = messageText?.trim();
+        if (!receiverId || !trimmedText) {
+            return null;
+        }
+
+        const response = await postMessageApiCall(receiverId, trimmedText)
+        setText('')
+        await syncActiveThread(receiverId)
+        return response;
     }
 
     /**
@@ -170,11 +210,13 @@ export const ChatHooks = () => {
     }
     return {
         postMessageApiCall,
+        sendMessageAndRefresh,
         text,
         handleTextChange,
         getMessageListApiCall,
         chatList,
         getChatDetailsApiCall,
+        syncActiveThread,
         chatDetail,
         saveAccData,
         openChatWindow,
